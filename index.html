@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MPAS 2.0 — Məhkəmə Prosesləri Altsistemi (Prototip)</title>
+<style>
+:root{
+  --blue:#1b4f8a; --blue-d:#123a68; --blue-l:#e8f0fa; --bg:#f4f6f9; --line:#dde3ea;
+  --text:#1f2937; --mut:#6b7280; --green:#15803d; --red:#b91c1c; --amber:#b45309;
+  --r:10px; font-size:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",system-ui,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:13px;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:#fff;width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid #9dbde4;border-color:var(--blue)}
+label{font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:3px}
+.field{margin-bottom:10px}
+.btn{border:none;border-radius:7px;padding:8px 14px;font-size:13px;font-weight:600}
+.btn-p{background:var(--blue);color:#fff}.btn-p:hover{background:var(--blue-d)}
+.btn-s{background:#fff;color:var(--blue);border:1px solid var(--blue)}
+.btn-g{background:#eef1f5;color:#374151}
+.btn-r{background:#fee2e2;color:var(--red)}
+.btn-sm{padding:4px 9px;font-size:12px}
+/* login */
+#login{position:fixed;inset:0;background:linear-gradient(135deg,#123a68,#1b4f8a);display:flex;align-items:center;justify-content:center;z-index:100}
+.login-card{background:#fff;border-radius:14px;padding:34px;width:420px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.login-card h1{font-size:20px;color:var(--blue-d);margin-bottom:4px}
+.login-card .sub{color:var(--mut);font-size:12.5px;margin-bottom:20px}
+.badge-eimza{display:inline-block;background:var(--blue-l);color:var(--blue);font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;margin-bottom:14px}
+/* shell */
+#app{display:none;min-height:100vh}
+#side{position:fixed;top:0;left:0;bottom:0;width:240px;background:var(--blue-d);color:#dbe6f3;display:flex;flex-direction:column}
+#side .logo{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.12)}
+#side .logo b{color:#fff;font-size:16px}
+#side .logo div{font-size:10.5px;opacity:.75;margin-top:3px;line-height:1.4}
+#nav{flex:1;overflow:auto;padding:10px 8px}
+.nav-h{font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.55;padding:12px 10px 4px}
+.nav-i{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;font-size:13px;color:#cfdcec;margin-bottom:2px;cursor:pointer}
+.nav-i:hover{background:rgba(255,255,255,.08)}
+.nav-i.act{background:var(--blue);color:#fff;font-weight:600}
+.nav-i .cnt{margin-left:auto;background:rgba(255,255,255,.15);border-radius:12px;font-size:11px;padding:1px 7px}
+#side .usr{padding:12px 14px;border-top:1px solid rgba(255,255,255,.12);font-size:12px}
+#side .usr b{color:#fff;display:block}
+#side .usr .role{opacity:.7}
+#main{margin-left:240px;padding:22px 26px 60px}
+.pagehead{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.pagehead h2{font-size:19px;color:var(--blue-d)}
+.pagehead .sp{flex:1}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.grid{display:grid;gap:10px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f1f5f9;text-align:left;padding:8px 9px;font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:#475569;border-bottom:1px solid var(--line)}
+td{padding:8px 9px;border-bottom:1px solid #edf1f5;vertical-align:top}
+tr.rowlink:hover{background:var(--blue-l);cursor:pointer}
+.pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;white-space:nowrap}
+.pl-blue{background:var(--blue-l);color:var(--blue)}
+.pl-green{background:#dcfce7;color:var(--green)}
+.pl-amber{background:#fef3c7;color:var(--amber)}
+.pl-red{background:#fee2e2;color:var(--red)}
+.pl-gray{background:#e5e7eb;color:#4b5563}
+.uid{font-family:Consolas,monospace;font-size:12px;color:var(--blue-d);font-weight:700}
+.mut{color:var(--mut);font-size:12px}
+.empty{padding:36px;text-align:center;color:var(--mut)}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.stat .n{font-size:24px;font-weight:700;color:var(--blue-d)}
+.stat .l{font-size:12px;color:var(--mut);margin-top:2px}
+/* tabs */
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--line);margin-bottom:14px;flex-wrap:wrap}
+.tab{padding:8px 14px;font-size:13px;font-weight:600;color:var(--mut);border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-2px}
+.tab.act{color:var(--blue);border-bottom-color:var(--blue)}
+/* modal */
+#ovl{position:fixed;inset:0;background:rgba(15,23,42,.5);display:none;align-items:flex-start;justify-content:center;z-index:50;overflow:auto;padding:40px 16px}
+#ovl.open{display:flex}
+.modal{background:#fff;border-radius:12px;width:640px;max-width:100%;padding:22px}
+.modal h3{font-size:16px;color:var(--blue-d);margin-bottom:14px}
+.modal .foot{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+/* instance card */
+.inst{border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:8px;padding:14px;margin-bottom:12px;background:#fff}
+.inst h4{font-size:14px;color:var(--blue-d);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.kv{display:grid;grid-template-columns:170px 1fr;gap:4px 10px;font-size:12.5px;margin-top:8px}
+.kv .k{color:var(--mut)}
+.subl{font-size:12px;font-weight:700;color:#475569;margin:10px 0 4px;text-transform:uppercase;letter-spacing:.03em}
+.chip{display:inline-block;background:#f1f5f9;border:1px solid var(--line);border-radius:6px;padding:3px 8px;font-size:12px;margin:2px 3px 2px 0}
+.warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e;padding:8px 12px;border-radius:8px;font-size:12.5px;margin-bottom:10px}
+.toast{position:fixed;bottom:20px;right:20px;background:#111827;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;z-index:200;display:none}
+.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:4px}
+@media(max-width:1100px){.filters{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.g3,.g4{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="login-card">
+    <div class="badge-eimza">MEİS · Elektron imza (imitasiya)</div>
+    <h1>MPAS 2.0</h1>
+    <div class="sub">Məhkəmə Prosesləri Altsistemi — ƏƏSMN · DOST Rəqəmsal İnnovasiyalar Mərkəzi<br><b>İşlək prototip</b> — inteqrasiyalar (MİS, İAMAS, DVX, MEİS) imitasiya rejimindədir.</div>
+    <div class="field"><label>İstifadəçi (MİS-dən gələn əməkdaşlar)</label><select id="loginUser"></select></div>
+    <button class="btn btn-p" style="width:100%" onclick="doLogin()">E-imza ilə daxil ol</button>
+  </div>
+</div>
+
+<div id="app">
+  <div id="side">
+    <div class="logo"><b>MPAS 2.0</b><div>Məhkəmə Prosesləri Altsistemi<br>ƏƏSMN — prototip</div></div>
+    <div id="nav"></div>
+    <div class="usr"><b id="usrName"></b><span class="role" id="usrRole"></span><br>
+      <button class="btn btn-sm btn-g" style="margin-top:8px" onclick="logout()">Çıxış</button>
+    </div>
+  </div>
+  <div id="main"></div>
+</div>
+
+<div id="ovl" onclick="if(event.target===this)closeModal()"><div class="modal" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= SORAQÇALAR / İSTİNAD MƏLUMATLARI ================= */
+const CASE_TYPES = [
+  {id:'mulki',   name:'Mülki işlər',          maxInst:3},
+  {id:'inzibati',name:'İnzibati işlər',        maxInst:3},
+  {id:'xeta',    name:'İnzibati xəta işləri',  maxInst:2},
+  {id:'cinayet', name:'Cinayət işləri',        maxInst:3}
+];
+const INST_LEVELS = {1:'I instansiya', 2:'Apellyasiya instansiyası', 3:'Kassasiya instansiyası'};
+
+// MİS inteqrasiyası (imitasiya) — təşkilatlar, strukturlar, əməkdaşlar, vəzifələr
+const DB = {
+  orgs:[
+    {id:1,name:'ƏƏSMN — Nazirlik Aparatı',code:'AP'},
+    {id:2,name:'Dövlət Sosial Müdafiə Fondu (DSMF)',code:'DSMF'},
+    {id:3,name:'DOST Agentliyi',code:'DOST'},
+    {id:4,name:'Dövlət Məşğulluq Agentliyi',code:'DMA'},
+    {id:5,name:'Sosial Xidmətlər Agentliyi',code:'SXA'}
+  ],
+  structs:[
+    {id:1,orgId:1,name:'Hüquq şöbəsi'},
+    {id:2,orgId:1,name:'Hüquq şöbəsi / Məhkəmə mübahisələri ilə iş sektoru'},
+    {id:3,orgId:2,name:'Məhkəmə Mübahisələri ilə iş üzrə Mərkəzi Filial'},
+    {id:4,orgId:2,name:'Sənədlərlə iş, təhlil və statistika şöbəsi'},
+    {id:5,orgId:3,name:'Hüquq təminatı şöbəsi'},
+    {id:6,orgId:4,name:'Hüquq sektoru'}
+  ],
+  positions:[
+    {id:1,name:'Sektor müdiri'},{id:2,name:'Şöbə müdiri'},{id:3,name:'Baş məsləhətçi'},
+    {id:4,name:'Aparıcı məsləhətçi'},{id:5,name:'Hüquqşünas'}
+  ],
+  employees:[
+    {id:1,fin:'1A2B3C4',name:'Səlimova Fidan Qalib qızı',orgId:1,structId:2,posId:1,role:'admin',active:true},
+    {id:2,fin:'5D6E7F8',name:'İsmayılov Fərid Sabir oğlu',orgId:2,structId:4,posId:2,role:'employee',active:true},
+    {id:3,fin:'9G8H7J6',name:'Məmmədov Elvin Rauf oğlu',orgId:1,structId:2,posId:3,role:'employee',active:true},
+    {id:4,fin:'2K3L4M5',name:'Quliyeva Aysel Namiq qızı',orgId:3,structId:5,posId:4,role:'employee',active:true},
+    {id:5,fin:'7N8P9Q1',name:'Həsənov Tural İlham oğlu',orgId:1,structId:1,posId:3,role:'viewer',active:true}
+  ],
+  courts:[
+    {id:1,name:'Bakı İnzibati Məhkəməsi',level:1,type:'İnzibati'},
+    {id:2,name:'Bakı şəhəri Nəsimi Rayon Məhkəməsi',level:1,type:'Ümumi'},
+    {id:3,name:'Bakı şəhəri Yasamal Rayon Məhkəməsi',level:1,type:'Ümumi'},
+    {id:4,name:'Bakı Apellyasiya Məhkəməsi',level:2,type:'Apellyasiya'},
+    {id:5,name:'Şirvan Apellyasiya Məhkəməsi',level:2,type:'Apellyasiya'},
+    {id:6,name:'Ali Məhkəmə',level:3,type:'Kassasiya'},
+    {id:7,name:'Gəncə İnzibati Məhkəməsi',level:1,type:'İnzibati'}
+  ],
+  judges:[
+    {id:1,courtId:1,name:'Hakim R.Əliyev',spec:'İnzibati',active:true},
+    {id:2,courtId:1,name:'Hakim S.Vəliyeva',spec:'İnzibati',active:true},
+    {id:3,courtId:2,name:'Hakim N.Kərimov',spec:'Mülki',active:true},
+    {id:4,courtId:3,name:'Hakim G.Abbasova',spec:'Cinayət',active:true},
+    {id:5,courtId:4,name:'Hakim T.Rzayev',spec:'Mülki',active:true},
+    {id:6,courtId:4,name:'Hakim L.Hüseynova',spec:'İnzibati',active:true},
+    {id:7,courtId:6,name:'Hakim M.Cəfərov',spec:'Kassasiya',active:true},
+    {id:8,courtId:5,name:'Hakim K.İbrahimov',spec:'Apellyasiya',active:true}
+  ],
+  // Soraqçalar
+  refs:{
+    caseStatus:['Baxılır','Təxirə salınıb','Dayandırılıb','Yekunlaşıb','İcraatdadır','Arxivləşdirilib'],
+    decisionTypes:['Qismən təmin','Tam təmin','Rədd edilib','İcraata xitam','Geri qaytarılıb','Ləğv edilib','Dəyişdirilib','Qüvvədə saxlanılıb'],
+    partyRoles:['İddiaçı','Cavabdeh','Üçüncü şəxs','Ərizəçi','Maraqlı şəxs','Zərərçəkmiş','Təqsirləndirilən'],
+    predmets:['Pensiya təyinatı','Müavinət','Ünvanlı sosial yardım','Əmək mübahisəsi','Ödənişin geri tutulması','İnzibati xəta protokolu','Digər'],
+    icraStatus:['İcraya yönəldilməyib','İcradadır','İcra edilib','İcra dayandırılıb']
+  },
+  seq: 4,
+  cases: [],
+  audit: []
+};
+
+// İAMAS / DVX imitasiya bazası
+const IAMAS = {
+  '5AZE12R':{name:'Rəsulov Kamran Adil oğlu',dob:'14.03.1979'},
+  '7BXK93T':{name:'Nağıyeva Sevinc Faiq qızı',dob:'02.11.1985'},
+  '3QWE45Y':{name:'Bayramov Orxan Zaur oğlu',dob:'21.07.1990'}
+};
+const DVX = {
+  '1234567890':{name:'"Aqro-Servis" MMC',addr:'Bakı ş., Nizami r.'},
+  '9876543210':{name:'"İnşaat-Tikinti" ASC',addr:'Bakı ş., Xətai r.'},
+  '5555555555':{name:'"Loqistika Plus" MMC',addr:'Sumqayıt ş.'}
+};
+
+/* ================= NÜMUNƏ İŞLƏR ================= */
+function seedCases(){
+  DB.cases = [
+    {uid:'MPAS-2026-000001',type:'mulki',status:'Baxılır',
+     general:{orgId:2,structId:3,repName:'İsmayılov Fərid',factStart:'2026-02-10',orgStart:'2026-02-14',note:'Nazirlik prosesə üçüncü şəxs qismində cəlb olunub'},
+     icra:{status:'İcraya yönəldilməyib',note:''},
+     instances:[
+       {level:1,courtId:2,judgeId:3,caseNo:'2(005)-1123/2026',inDate:'2026-02-14',predmet:'Pensiya təyinatı',
+        parties:[{kind:'F',code:'5AZE12R',name:'Rəsulov Kamran Adil oğlu',role:'İddiaçı'},{kind:'Q',code:'',name:'DSMF',role:'Cavabdeh'}],
+        hearings:[{date:'2026-03-05',note:'İlkin iclas'},{date:'2026-04-02',note:'Ekspertiza təyin edildi'}],
+        decision:null,status:'Baxılır'}
+     ],history:[{t:'2026-02-14 10:12',u:'İsmayılov Fərid',a:'İş yaradıldı'}]},
+    {uid:'MPAS-2026-000002',type:'inzibati',status:'Yekunlaşıb',
+     general:{orgId:1,structId:2,repName:'Məmmədov Elvin',factStart:'2025-11-20',orgStart:'2025-11-20',note:''},
+     icra:{status:'İcra edilib',note:'Qərar üzrə ödəniş 12.05.2026-da icra edilib'},
+     instances:[
+       {level:1,courtId:1,judgeId:1,caseNo:'e-2026-77812',inDate:'2025-11-24',predmet:'Ünvanlı sosial yardım',
+        parties:[{kind:'F',code:'7BXK93T',name:'Nağıyeva Sevinc Faiq qızı',role:'İddiaçı'},{kind:'Q',code:'',name:'ƏƏSMN',role:'Cavabdeh'}],
+        hearings:[{date:'2026-01-15',note:''}],
+        decision:{type:'Rədd edilib',date:'2026-01-15',note:'İddia təmin edilmədi'},status:'Yekunlaşıb'},
+       {level:2,courtId:4,judgeId:6,caseNo:'2-1(103)-456/2026',inDate:'2026-02-08',predmet:'Ünvanlı sosial yardım',
+        parties:[{kind:'F',code:'7BXK93T',name:'Nağıyeva Sevinc Faiq qızı',role:'Ərizəçi'},{kind:'Q',code:'',name:'ƏƏSMN',role:'Cavabdeh'}],
+        hearings:[{date:'2026-04-20',note:''}],
+        decision:{type:'Qüvvədə saxlanılıb',date:'2026-04-20',note:''},status:'Yekunlaşıb'}
+     ],history:[{t:'2025-11-24 09:00',u:'Məmmədov Elvin',a:'İş yaradıldı'},{t:'2026-02-08 14:30',u:'Məmmədov Elvin',a:'Apellyasiya instansiyası əlavə edildi'}]},
+    {uid:'MPAS-2026-000003',type:'xeta',status:'Baxılır',
+     general:{orgId:4,structId:6,repName:'Quliyeva Aysel',factStart:'2026-05-03',orgStart:'2026-05-03',note:''},
+     icra:{status:'İcraya yönəldilməyib',note:''},
+     instances:[
+       {level:1,courtId:3,judgeId:4,caseNo:'3(006)-889/2026',inDate:'2026-05-06',predmet:'İnzibati xəta protokolu',
+        parties:[{kind:'H',code:'1234567890',name:'"Aqro-Servis" MMC',role:'Cavabdeh'}],
+        hearings:[],decision:null,status:'Baxılır'}
+     ],history:[{t:'2026-05-06 11:40',u:'Quliyeva Aysel',a:'İş yaradıldı'}]}
+  ];
+}
+seedCases();
+
+/* ================= VƏZİYYƏT ================= */
+let USER=null, VIEW={page:'list',type:'mulki'}, DETAIL=null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const now=()=>{const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`};
+const fmtD=s=>s?s.split('-').reverse().join('.'):'—';
+const orgN=id=>(DB.orgs.find(o=>o.id==id)||{}).name||'—';
+const structN=id=>(DB.structs.find(s=>s.id==id)||{}).name||'—';
+const courtN=id=>(DB.courts.find(c=>c.id==id)||{}).name||'—';
+const judgeN=id=>(DB.judges.find(j=>j.id==id)||{}).name||'—';
+const typeN=id=>(CASE_TYPES.find(t=>t.id===id)||{}).name||id;
+function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',2600)}
+function audit(a,d){DB.audit.unshift({t:now(),u:USER?USER.name:'sistem',a,d:d||''})}
+function chist(c,a){c.history.unshift({t:now(),u:USER.name,a})}
+function statusPill(s){
+  const m={'Baxılır':'pl-blue','Yekunlaşıb':'pl-green','Dayandırılıb':'pl-amber','Təxirə salınıb':'pl-amber','İcraatdadır':'pl-blue','Arxivləşdirilib':'pl-gray'};
+  return `<span class="pill ${m[s]||'pl-gray'}">${esc(s)}</span>`;
+}
+const can=p=>{ // sadə səlahiyyət modeli (MEİS rolları imitasiyası)
+  if(USER.role==='admin') return true;
+  if(USER.role==='employee') return p!=='admin';
+  return p==='read'||p==='report'; // viewer
+};
+
+/* ================= GİRİŞ ================= */
+(function(){
+  $('loginUser').innerHTML = DB.employees.map(e=>{
+    const r={admin:'Admin',employee:'Nazirlik əməkdaşı',viewer:'İnzibati istifadəçi (nəzarət/hesabat)'}[e.role];
+    return `<option value="${e.id}">${esc(e.name)} — ${esc(orgN(e.orgId))} (${r})</option>`;
+  }).join('');
+})();
+function doLogin(){
+  USER = DB.employees.find(e=>e.id==$('loginUser').value);
+  $('login').style.display='none'; $('app').style.display='block';
+  $('usrName').textContent=USER.name;
+  $('usrRole').textContent={admin:'Admin',employee:'Nazirlik əməkdaşı',viewer:'İnzibati istifadəçi'}[USER.role]+' · '+structN(USER.structId);
+  audit('Sistemə giriş','MEİS e-imza (imitasiya)');
+  VIEW={page:'list',type:'mulki'}; render();
+}
+function logout(){audit('Sistemdən çıxış');USER=null;$('app').style.display='none';$('login').style.display='flex'}
+
+/* ================= NAVİQASİYA ================= */
+function render(){
+  let nav = `<div class="nav-h">Məhkəmə işləri</div>`;
+  nav += CASE_TYPES.map(t=>{
+    const n=DB.cases.filter(c=>c.type===t.id).length;
+    return `<div class="nav-i ${VIEW.page==='list'&&VIEW.type===t.id?'act':''}" onclick="go('list','${t.id}')">${t.name}<span class="cnt">${n}</span></div>`;
+  }).join('');
+  nav += `<div class="nav-h">Analitika</div>
+    <div class="nav-i ${VIEW.page==='reports'?'act':''}" onclick="go('reports')">Hesabatlar</div>`;
+  if(can('admin')) nav += `<div class="nav-h">İdarəetmə</div>
+    <div class="nav-i ${VIEW.page==='admin'?'act':''}" onclick="go('admin')">Admin Panel</div>`;
+  $('nav').innerHTML=nav;
+  const m=$('main');
+  if(VIEW.page==='list') m.innerHTML=viewList(VIEW.type);
+  else if(VIEW.page==='detail') m.innerHTML=viewDetail();
+  else if(VIEW.page==='reports') m.innerHTML=viewReports();
+  else if(VIEW.page==='admin') m.innerHTML=viewAdmin();
+}
+function go(page,type){VIEW={page,type:type||VIEW.type,tab:0};DETAIL=null;render()}
+function openCase(uid,tab){DETAIL={uid,tab:tab||0};VIEW.page='detail';render()}
+
+/* ================= İŞLƏRİN SİYAHISI ================= */
+let FLT={};
+function viewList(type){
+  const t=CASE_TYPES.find(x=>x.id===type);
+  let rows=DB.cases.filter(c=>c.type===type);
+  const f=FLT;
+  if(f.q) rows=rows.filter(c=>c.uid.toLowerCase().includes(f.q.toLowerCase())||c.instances.some(i=>i.caseNo.toLowerCase().includes(f.q.toLowerCase())));
+  if(f.court) rows=rows.filter(c=>c.instances.some(i=>i.courtId==f.court));
+  if(f.judge) rows=rows.filter(c=>c.instances.some(i=>i.judgeId==f.judge));
+  if(f.status) rows=rows.filter(c=>c.status===f.status);
+  if(f.org) rows=rows.filter(c=>c.general.orgId==f.org);
+  if(f.inst) rows=rows.filter(c=>String(cur(c).level)===f.inst);
+  if(f.party) rows=rows.filter(c=>c.instances.some(i=>i.parties.some(p=>p.name.toLowerCase().includes(f.party.toLowerCase()))));
+  const trs=rows.map(c=>{
+    const i=cur(c);
+    return `<tr class="rowlink" onclick="openCase('${c.uid}')">
+      <td><span class="uid">${c.uid}</span></td>
+      <td>${esc(i.caseNo||'—')}<div class="mut">${INST_LEVELS[i.level]}</div></td>
+      <td>${esc(courtN(i.courtId))}<div class="mut">${esc(judgeN(i.judgeId))}</div></td>
+      <td>${esc(orgN(c.general.orgId))}</td>
+      <td>${esc(i.predmet||'—')}</td>
+      <td>${fmtD(i.inDate)}</td>
+      <td>${statusPill(c.status)}</td></tr>`;
+  }).join('');
+  return `<div class="pagehead"><h2>${t.name}</h2><span class="pill pl-blue">${rows.length} iş</span><div class="sp"></div>
+      ${can('write')?`<button class="btn btn-p" onclick="mNewCase('${type}')">+ Yeni iş</button>`:''}
+      <button class="btn btn-s" onclick="exportCSV('${type}')">Excel (CSV) ixrac</button></div>
+    <div class="card">
+      <div class="filters">
+        <input placeholder="UID / iş nömrəsi axtar" value="${esc(f.q||'')}" onchange="FLT.q=this.value;render()">
+        <select onchange="FLT.court=this.value;render()"><option value="">Məhkəmə (hamısı)</option>${DB.courts.map(c=>`<option value="${c.id}" ${f.court==c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select>
+        <select onchange="FLT.judge=this.value;render()"><option value="">Hakim (hamısı)</option>${DB.judges.map(j=>`<option value="${j.id}" ${f.judge==j.id?'selected':''}>${esc(j.name)}</option>`).join('')}</select>
+        <select onchange="FLT.status=this.value;render()"><option value="">Status (hamısı)</option>${DB.refs.caseStatus.map(s=>`<option ${f.status===s?'selected':''}>${s}</option>`).join('')}</select>
+        <select onchange="FLT.org=this.value;render()"><option value="">Qurum (hamısı)</option>${DB.orgs.map(o=>`<option value="${o.id}" ${f.org==o.id?'selected':''}>${esc(o.name)}</option>`).join('')}</select>
+        <select onchange="FLT.inst=this.value;render()"><option value="">Cari instansiya (hamısı)</option>${Object.entries(INST_LEVELS).map(([k,v])=>`<option value="${k}" ${f.inst===k?'selected':''}>${v}</option>`).join('')}</select>
+        <input placeholder="Tərəf üzrə axtar" value="${esc(f.party||'')}" onchange="FLT.party=this.value;render()">
+        <button class="btn btn-g" onclick="FLT={};render()">Filtri sıfırla</button>
+      </div>
+      ${rows.length?`<div style="overflow:auto"><table><tr><th>UID</th><th>İş nömrəsi</th><th>Məhkəmə / Hakim</th><th>Qurum</th><th>Predmet</th><th>Daxil olma</th><th>Status</th></tr>${trs}</table></div>`:`<div class="empty">Bu meyarlara uyğun iş tapılmadı</div>`}
+    </div>`;
+}
+const cur=c=>c.instances[c.instances.length-1];
+
+/* ================= İŞİN DETALI ================= */
+function viewDetail(){
+  const c=DB.cases.find(x=>x.uid===DETAIL.uid); if(!c) return '<div class="empty">İş tapılmadı</div>';
+  const t=CASE_TYPES.find(x=>x.id===c.type);
+  const tabs=['Ümumi məlumat','İnstansiyalar','İcra vəziyyəti','Tarixçə'];
+  let body='';
+  if(DETAIL.tab===0){
+    const g=c.general;
+    body=`<div class="card"><div class="kv">
+      <div class="k">Qurum (tərəf)</div><div>${esc(orgN(g.orgId))}</div>
+      <div class="k">Struktur bölmə</div><div>${esc(structN(g.structId))}</div>
+      <div class="k">Nazirlik/qurum nümayəndəsi</div><div>${esc(g.repName||'—')}</div>
+      <div class="k">İşin faktiki başlama tarixi</div><div>${fmtD(g.factStart)}</div>
+      <div class="k">Quruma münasibətdə başlanma</div><div>${fmtD(g.orgStart)}</div>
+      <div class="k">Qeyd</div><div>${esc(g.note||'—')}</div></div>
+      ${can('write')?`<div style="margin-top:12px"><button class="btn btn-s btn-sm" onclick="mEditGeneral('${c.uid}')">Redaktə et</button></div>`:''}</div>`;
+  } else if(DETAIL.tab===1){
+    body = c.instances.map((i,ix)=>`
+      <div class="inst"><h4>${INST_LEVELS[i.level]} ${i.decision?`<span class="pill pl-green">Yekunlaşıb</span>`:`<span class="pill pl-blue">${esc(i.status||'Baxılır')}</span>`}
+        <span style="margin-left:auto">${can('write')?`<button class="btn btn-s btn-sm" onclick="mInstance('${c.uid}',${ix})">Redaktə</button>`:''}</span></h4>
+        <div class="kv">
+          <div class="k">Məhkəmə</div><div>${esc(courtN(i.courtId))}</div>
+          <div class="k">Hakim</div><div>${esc(judgeN(i.judgeId))}</div>
+          <div class="k">İş nömrəsi</div><div>${esc(i.caseNo||'—')}</div>
+          <div class="k">Daxil olma tarixi</div><div>${fmtD(i.inDate)}</div>
+          <div class="k">İşin predmeti</div><div>${esc(i.predmet||'—')}</div>
+          ${i.decision?`<div class="k">Qərar</div><div><b>${esc(i.decision.type)}</b> — ${fmtD(i.decision.date)}${i.decision.note?` · ${esc(i.decision.note)}`:''}</div>`:''}
+        </div>
+        <div class="subl">Tərəflər</div>
+        ${i.parties.length?i.parties.map((p,pi)=>`<span class="chip">${esc(p.name)} — <b>${esc(p.role)}</b>${p.code?` · ${p.kind==='F'?'FİN':'VÖEN'}: ${esc(p.code)}`:''} ${can('write')?`<a href="#" onclick="rmParty('${c.uid}',${ix},${pi});return false" style="color:var(--red)">✕</a>`:''}</span>`).join(''):'<span class="mut">Tərəf əlavə edilməyib</span>'}
+        ${can('write')?`<div style="margin-top:6px"><button class="btn btn-g btn-sm" onclick="mParty('${c.uid}',${ix})">+ Tərəf (İAMAS/DVX)</button></div>`:''}
+        <div class="subl">Məhkəmə iclasları</div>
+        ${i.hearings.length?i.hearings.map(h=>`<span class="chip">${fmtD(h.date)}${h.note?` — ${esc(h.note)}`:''}</span>`).join(''):'<span class="mut">İclas qeyd edilməyib</span>'}
+        ${can('write')?`<div style="margin-top:6px"><button class="btn btn-g btn-sm" onclick="mHearing('${c.uid}',${ix})">+ İclas</button></div>`:''}
+      </div>`).join('');
+    if(can('write')){
+      body += `<button class="btn btn-p" onclick="mInstance('${c.uid}',-1)">+ Yeni instansiya mərhələsi</button>
+        <div class="mut" style="margin-top:6px">${t.id==='xeta'?'İnzibati xəta işləri üçün kassasiya instansiyası sistem tərəfindən məhdudlaşdırılır.':'İş real prosesə uyğun instansiyalar arasında sərbəst hərəkət edə bilər (məs., apellyasiyadan yenidən I instansiyaya).'}</div>`;
+    }
+  } else if(DETAIL.tab===2){
+    body=`<div class="card"><div class="kv">
+      <div class="k">İcra statusu</div><div>${statusPill(c.icra.status)}</div>
+      <div class="k">Qeyd</div><div>${esc(c.icra.note||'—')}</div></div>
+      ${can('write')?`<div style="margin-top:12px"><button class="btn btn-s btn-sm" onclick="mIcra('${c.uid}')">Dəyişdir</button></div>`:''}</div>`;
+  } else {
+    body=`<div class="card"><table><tr><th>Tarix</th><th>İstifadəçi</th><th>Əməliyyat</th></tr>
+      ${c.history.map(h=>`<tr><td>${h.t}</td><td>${esc(h.u)}</td><td>${esc(h.a)}</td></tr>`).join('')}</table></div>`;
+  }
+  return `<div class="pagehead">
+      <button class="btn btn-g btn-sm" onclick="go('list','${c.type}')">← Siyahı</button>
+      <h2><span class="uid" style="font-size:17px">${c.uid}</span></h2>
+      <span class="pill pl-gray">${typeN(c.type)}</span>${statusPill(c.status)}
+      <div class="sp"></div>
+      ${can('write')?`<select style="width:200px" onchange="setStatus('${c.uid}',this.value)">
+        <option value="">İşin statusunu dəyiş…</option>${DB.refs.caseStatus.map(s=>`<option ${c.status===s?'disabled':''}>${s}</option>`).join('')}</select>`:''}
+    </div>
+    <div class="tabs">${tabs.map((tb,i)=>`<button class="tab ${DETAIL.tab===i?'act':''}" onclick="DETAIL.tab=${i};render()">${tb}</button>`).join('')}</div>${body}`;
+}
+function setStatus(uid,s){if(!s)return;const c=DB.cases.find(x=>x.uid===uid);c.status=s;chist(c,`Status dəyişdirildi: ${s}`);audit('İş statusu dəyişdirildi',uid);render()}
+function rmParty(uid,ix,pi){const c=DB.cases.find(x=>x.uid===uid);const p=c.instances[ix].parties.splice(pi,1)[0];chist(c,`Tərəf silindi: ${p.name}`);render()}
+
+/* ================= MODALLAR ================= */
+function openModal(html){$('modalBox').innerHTML=html;$('ovl').classList.add('open')}
+function closeModal(){$('ovl').classList.remove('open')}
+
+function mNewCase(type){
+  openModal(`<h3>Yeni iş — ${typeN(type)}</h3>
+    <div class="warn">İş yaradıldıqda sistem avtomatik unikal <b>UID</b> təyin edir. İş növü sonradan dəyişdirilə bilməz.</div>
+    <div class="grid g2">
+      <div class="field"><label>Qurum (tərəf olan)</label><select id="f_org">${DB.orgs.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>Struktur bölmə</label><select id="f_struct">${DB.structs.map(s=>`<option value="${s.id}">${esc(orgN(s.orgId))} — ${esc(s.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>Nümayəndə</label><input id="f_rep" value="${esc(USER.name)}"></div>
+      <div class="field"><label>Faktiki başlama tarixi</label><input type="date" id="f_fact"></div>
+      <div class="field"><label>Quruma münasibətdə başlanma</label><input type="date" id="f_orgstart"></div>
+      <div class="field"><label>Qeyd</label><input id="f_note"></div>
+    </div>
+    <div class="foot"><button class="btn btn-g" onclick="closeModal()">İmtina</button>
+    <button class="btn btn-p" onclick="saveNewCase('${type}')">Yarat</button></div>`);
+}
+function saveNewCase(type){
+  DB.seq++; const uid=`MPAS-2026-${String(DB.seq).padStart(6,'0')}`;
+  const c={uid,type,status:'Baxılır',
+    general:{orgId:+$('f_org').value,structId:+$('f_struct').value,repName:$('f_rep').value,factStart:$('f_fact').value,orgStart:$('f_orgstart').value,note:$('f_note').value},
+    icra:{status:'İcraya yönəldilməyib',note:''},instances:[],history:[]};
+  DB.cases.push(c); chist(c,'İş yaradıldı'); audit('Yeni iş yaradıldı',uid);
+  closeModal(); toast(`İş yaradıldı: ${uid}`); openCase(uid,1); mInstance(uid,-1);
+}
+function mEditGeneral(uid){
+  const c=DB.cases.find(x=>x.uid===uid),g=c.general;
+  openModal(`<h3>Ümumi məlumat — ${uid}</h3><div class="grid g2">
+    <div class="field"><label>Qurum</label><select id="f_org">${DB.orgs.map(o=>`<option value="${o.id}" ${g.orgId==o.id?'selected':''}>${esc(o.name)}</option>`).join('')}</select></div>
+    <div class="field"><label>Struktur bölmə</label><select id="f_struct">${DB.structs.map(s=>`<option value="${s.id}" ${g.structId==s.id?'selected':''}>${esc(s.name)}</option>`).join('')}</select></div>
+    <div class="field"><label>Nümayəndə</label><input id="f_rep" value="${esc(g.repName)}"></div>
+    <div class="field"><label>Faktiki başlama</label><input type="date" id="f_fact" value="${g.factStart||''}"></div>
+    <div class="field"><label>Quruma münasibətdə</label><input type="date" id="f_orgstart" value="${g.orgStart||''}"></div>
+    <div class="field"><label>Qeyd</label><input id="f_note" value="${esc(g.note)}"></div></div>
+    <div class="foot"><button class="btn btn-g" onclick="closeModal()">İmtina</button>
+    <button class="btn btn-p" onclick="(function(){Object.assign(DB.cases.find(x=>x.uid==='${uid}').general,{orgId:+f_org.value,structId:+f_struct.value,repName:f_rep.value,factStart:f_fact.value,orgStart:f_orgstart.value,note:f_note.value});chist(DB.cases.find(x=>x.uid==='${uid}'),'Ümumi məlumat redaktə edildi');closeModal();render()})()">Yadda saxla</button></div>`);
+}
+function mInstance(uid,ix){
+  const c=DB.cases.find(x=>x.uid===uid);
+  const t=CASE_TYPES.find(x=>x.id===c.type);
+  const i = ix>=0 ? c.instances[ix] : {level:1,courtId:'',judgeId:'',caseNo:'',inDate:'',predmet:'',status:'Baxılır',decision:null,parties:[],hearings:[]};
+  const levels=Object.entries(INST_LEVELS).filter(([k])=>+k<=t.maxInst);
+  openModal(`<h3>${ix>=0?'İnstansiya redaktəsi':'Yeni instansiya mərhələsi'} — ${uid}</h3>
+    ${t.id==='xeta'?`<div class="warn">İnzibati xəta işləri yalnız I instansiya və apellyasiya üzrə hərəkət edə bilər.</div>`:''}
+    <div class="grid g2">
+      <div class="field"><label>İnstansiya səviyyəsi</label><select id="i_level" onchange="fillCourts()">${levels.map(([k,v])=>`<option value="${k}" ${i.level==k?'selected':''}>${v}</option>`).join('')}</select></div>
+      <div class="field"><label>Məhkəmə</label><select id="i_court" onchange="fillJudges()"></select></div>
+      <div class="field"><label>Hakim</label><select id="i_judge"></select></div>
+      <div class="field"><label>İş nömrəsi (instansiya üzrə)</label><input id="i_caseno" value="${esc(i.caseNo)}"></div>
+      <div class="field"><label>Daxil olma tarixi</label><input type="date" id="i_indate" value="${i.inDate||''}"></div>
+      <div class="field"><label>İşin predmeti</label><select id="i_predmet">${DB.refs.predmets.map(p=>`<option ${i.predmet===p?'selected':''}>${p}</option>`).join('')}</select></div>
+      <div class="field"><label>İnstansiya üzrə status</label><select id="i_status">${DB.refs.caseStatus.map(s=>`<option ${i.status===s?'selected':''}>${s}</option>`).join('')}</select></div>
+    </div>
+    <div class="subl">Qərar (instansiya yekunlaşıbsa)</div>
+    <div class="grid g3">
+      <div class="field"><label>Qərar növü</label><select id="i_dtype"><option value="">— yoxdur —</option>${DB.refs.decisionTypes.map(d=>`<option ${i.decision&&i.decision.type===d?'selected':''}>${d}</option>`).join('')}</select></div>
+      <div class="field"><label>Qərar tarixi</label><input type="date" id="i_ddate" value="${i.decision?i.decision.date:''}"></div>
+      <div class="field"><label>Qeyd</label><input id="i_dnote" value="${esc(i.decision?i.decision.note:'')}"></div>
+    </div>
+    <div class="foot"><button class="btn btn-g" onclick="closeModal()">İmtina</button>
+    <button class="btn btn-p" onclick="saveInstance('${uid}',${ix})">Yadda saxla</button></div>`);
+  fillCourts(i.courtId,i.judgeId);
+}
+function fillCourts(selC,selJ){
+  const lvl=+$('i_level').value;
+  const cs=DB.courts.filter(c=>c.level===lvl);
+  $('i_court').innerHTML=cs.map(c=>`<option value="${c.id}" ${selC==c.id?'selected':''}>${esc(c.name)}</option>`).join('')||'<option value="">—</option>';
+  fillJudges(selJ);
+}
+function fillJudges(selJ){
+  const cid=+$('i_court').value;
+  const js=DB.judges.filter(j=>j.courtId===cid&&j.active);
+  $('i_judge').innerHTML=js.map(j=>`<option value="${j.id}" ${selJ==j.id?'selected':''}>${esc(j.name)} (${esc(j.spec)})</option>`).join('')||'<option value="">—</option>';
+}
+function saveInstance(uid,ix){
+  const c=DB.cases.find(x=>x.uid===uid);
+  const t=CASE_TYPES.find(x=>x.id===c.type);
+  const lvl=+$('i_level').value;
+  if(lvl>t.maxInst){toast('Bu iş növü üçün həmin instansiya mümkün deyil');return}
+  const data={level:lvl,courtId:+$('i_court').value||null,judgeId:+$('i_judge').value||null,
+    caseNo:$('i_caseno').value,inDate:$('i_indate').value,predmet:$('i_predmet').value,status:$('i_status').value,
+    decision:$('i_dtype').value?{type:$('i_dtype').value,date:$('i_ddate').value,note:$('i_dnote').value}:null};
+  if(ix>=0){Object.assign(c.instances[ix],data);chist(c,`${INST_LEVELS[lvl]} məlumatları redaktə edildi`)}
+  else{c.instances.push(Object.assign({parties:[],hearings:[]},data));chist(c,`Yeni mərhələ əlavə edildi: ${INST_LEVELS[lvl]}`)}
+  audit('İnstansiya məlumatı yeniləndi',uid);
+  closeModal(); DETAIL={uid,tab:1}; VIEW.page='detail'; render();
+}
+function mParty(uid,ix){
+  openModal(`<h3>Tərəf əlavə et</h3>
+    <div class="grid g2">
+      <div class="field"><label>Şəxs növü</label><select id="p_kind" onchange="p_hint()">
+        <option value="F">Fiziki şəxs (İAMAS · FİN)</option><option value="H">Hüquqi şəxs (DVX · VÖEN)</option><option value="Q">Dövlət qurumu (MİS)</option></select></div>
+      <div class="field"><label>Prosesual rol</label><select id="p_role">${DB.refs.partyRoles.map(r=>`<option>${r}</option>`).join('')}</select></div>
+    </div>
+    <div class="field" id="p_codewrap"><label id="p_codelabel">FİN</label>
+      <div style="display:flex;gap:8px"><input id="p_code" placeholder="Məs.: 5AZE12R"><button class="btn btn-s" onclick="p_lookup()">Sorğula</button></div>
+      <div class="mut" id="p_hintline" style="margin-top:4px">İmitasiya FİN-ləri: 5AZE12R, 7BXK93T, 3QWE45Y</div></div>
+    <div class="field"><label>Ad / Təşkilatın adı</label><input id="p_name"></div>
+    <div class="foot"><button class="btn btn-g" onclick="closeModal()">İmtina</button>
+    <button class="btn btn-p" onclick="saveParty('${uid}',${ix})">Əlavə et</button></div>`);
+}
+function p_hint(){
+  const k=$('p_kind').value;
+  $('p_codewrap').style.display=k==='Q'?'none':'block';
+  $('p_codelabel').textContent=k==='F'?'FİN':'VÖEN';
+  $('p_hintline').textContent=k==='F'?'İmitasiya FİN-ləri: 5AZE12R, 7BXK93T, 3QWE45Y':'İmitasiya VÖEN-ləri: 1234567890, 9876543210, 5555555555';
+}
+function p_lookup(){
+  const k=$('p_kind').value, code=$('p_code').value.trim().toUpperCase();
+  const rec = k==='F' ? IAMAS[code] : DVX[code];
+  if(rec){$('p_name').value=rec.name;toast((k==='F'?'İAMAS':'DVX')+' sorğusu uğurlu (imitasiya)')}
+  else toast('Qeyd tapılmadı — imitasiya bazasındakı nümunə kodlardan istifadə edin');
+}
+function saveParty(uid,ix){
+  const c=DB.cases.find(x=>x.uid===uid);
+  const name=$('p_name').value.trim(); if(!name){toast('Ad boş ola bilməz');return}
+  c.instances[ix].parties.push({kind:$('p_kind').value,code:$('p_kind').value==='Q'?'':$('p_code').value.trim(),name,role:$('p_role').value});
+  chist(c,`Tərəf əlavə edildi: ${name}`); closeModal(); render();
+}
+function mHearing(uid,ix){
+  openModal(`<h3>Məhkəmə iclası</h3>
+    <div class="grid g2"><div class="field"><label>Tarix</label><input type="date" id="h_date"></div>
+    <div class="field"><label>Qeyd</label><input id="h_note"></div></div>
+    <div class="foot"><button class="btn btn-g" onclick="closeModal()">İmtina</button>
+    <button class="btn btn-p" onclick="(function(){const c=DB.cases.find(x=>x.uid==='${uid}');c.instances[${ix}].hearings.push({date:h_date.value,note:h_note.value});chist(c,'İclas əlavə edildi');closeModal();render()})()">Əlavə et</button></div>`);
+}
+function mIcra(uid){
+  const c=DB.cases.find(x=>x.uid===uid);
+  openModal(`<h3>İcra vəziyyəti — ${uid}</h3>
+    <div class="field"><label>Status</label><select id="ic_s">${DB.refs.icraStatus.map(s=>`<option ${c.icra.status===s?'selected':''}>${s}</option>`).join('')}</select></div>
+    <div class="field"><label>Qeyd</label><textarea id="ic_n" rows="3">${esc(c.icra.note)}</textarea></div>
+    <div class="foot"><button class="btn btn-g" onclick="closeModal()">İmtina</button>
+    <button class="btn btn-p" onclick="(function(){const c=DB.cases.find(x=>x.uid==='${uid}');c.icra={status:ic_s.value,note:ic_n.value};chist(c,'İcra vəziyyəti yeniləndi: '+ic_s.value);closeModal();render()})()">Yadda saxla</button></div>`);
+}
+
+/* ================= HESABATLAR ================= */
+function viewReports(){
+  const total=DB.cases.length;
+  const done=DB.cases.filter(c=>c.status==='Yekunlaşıb').length;
+  const act=total-done;
+  const byType=CASE_TYPES.map(t=>({t,n:DB.cases.filter(c=>c.type===t.id).length}));
+  const byOrg=DB.orgs.map(o=>({o,n:DB.cases.filter(c=>c.general.orgId===o.id).length})).filter(x=>x.n);
+  const byStatus=DB.refs.caseStatus.map(s=>({s,n:DB.cases.filter(c=>c.status===s).length})).filter(x=>x.n);
+  const byCourt=DB.courts.map(co=>({co,n:DB.cases.filter(c=>c.instances.some(i=>i.courtId===co.id)).length})).filter(x=>x.n);
+  const decs={}; DB.cases.forEach(c=>c.instances.forEach(i=>{if(i.decision)decs[i.decision.type]=(decs[i.decision.type]||0)+1}));
+  const bar=(n,max)=>`<div style="background:#e5edf7;border-radius:4px;height:14px"><div style="width:${max?Math.round(n/max*100):0}%;background:var(--blue);height:14px;border-radius:4px"></div></div>`;
+  const mx=Math.max(...byType.map(x=>x.n),1);
+  return `<div class="pagehead"><h2>Hesabatlar və statistik təhlillər</h2><div class="sp"></div>
+      <button class="btn btn-p" onclick="exportCSV()">Tam reyestr — Excel (CSV)</button></div>
+    <div class="stats">
+      <div class="stat"><div class="n">${total}</div><div class="l">Ümumi işlər</div></div>
+      <div class="stat"><div class="n">${act}</div><div class="l">Davam edən</div></div>
+      <div class="stat"><div class="n">${done}</div><div class="l">Yekunlaşmış</div></div>
+      <div class="stat"><div class="n">${DB.cases.filter(c=>c.icra.status==='İcra edilib').length}</div><div class="l">İcra edilmiş</div></div>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3 style="font-size:14px;margin-bottom:10px;color:var(--blue-d)">İş növləri üzrə</h3>
+        <table>${byType.map(x=>`<tr><td style="width:40%">${x.t.name}</td><td>${bar(x.n,mx)}</td><td style="width:40px;text-align:right"><b>${x.n}</b></td></tr>`).join('')}</table></div>
+      <div class="card"><h3 style="font-size:14px;margin-bottom:10px;color:var(--blue-d)">Statuslar üzrə</h3>
+        <table>${byStatus.map(x=>`<tr><td>${statusPill(x.s)}</td><td style="text-align:right"><b>${x.n}</b></td></tr>`).join('')||'<tr><td class="mut">Məlumat yoxdur</td></tr>'}</table></div>
+      <div class="card"><h3 style="font-size:14px;margin-bottom:10px;color:var(--blue-d)">Qurumlar üzrə</h3>
+        <table>${byOrg.map(x=>`<tr><td>${esc(x.o.name)}</td><td style="text-align:right"><b>${x.n}</b></td></tr>`).join('')}</table></div>
+      <div class="card"><h3 style="font-size:14px;margin-bottom:10px;color:var(--blue-d)">Məhkəmələr üzrə</h3>
+        <table>${byCourt.map(x=>`<tr><td>${esc(x.co.name)}</td><td style="text-align:right"><b>${x.n}</b></td></tr>`).join('')}</table></div>
+      <div class="card"><h3 style="font-size:14px;margin-bottom:10px;color:var(--blue-d)">Qərar növləri üzrə</h3>
+        <table>${Object.entries(decs).map(([k,v])=>`<tr><td>${esc(k)}</td><td style="text-align:right"><b>${v}</b></td></tr>`).join('')||'<tr><td class="mut">Qərar qeyd edilməyib</td></tr>'}</table></div>
+      <div class="card"><h3 style="font-size:14px;margin-bottom:10px;color:var(--blue-d)">Dövr üzrə seçmə ixrac</h3>
+        <div class="grid g2"><div class="field"><label>Başlanğıc</label><input type="date" id="r_from"></div>
+        <div class="field"><label>Son</label><input type="date" id="r_to"></div></div>
+        <button class="btn btn-s" onclick="exportCSV(null,r_from.value,r_to.value)">Dövr üzrə CSV ixrac</button>
+        <div class="mut" style="margin-top:6px">"Təhlil" AS üçün nəzərdə tutulan ixrac formatının imitasiyası.</div></div>
+    </div>`;
+}
+function exportCSV(type,from,to){
+  let rows=DB.cases.filter(c=>!type||c.type===type);
+  if(from) rows=rows.filter(c=>c.instances.some(i=>i.inDate>=from));
+  if(to) rows=rows.filter(c=>c.instances.some(i=>i.inDate<=to));
+  const head=['UID','İş növü','Status','Qurum','Struktur bölmə','Nümayəndə','Faktiki başlama','İnstansiya','Məhkəmə','Hakim','İş nömrəsi','Daxil olma','Predmet','Tərəflər','Qərar','Qərar tarixi','İcra statusu'];
+  const lines=[head.join(';')];
+  rows.forEach(c=>c.instances.forEach(i=>{
+    lines.push([c.uid,typeN(c.type),c.status,orgN(c.general.orgId),structN(c.general.structId),c.general.repName,c.general.factStart,
+      INST_LEVELS[i.level],courtN(i.courtId),judgeN(i.judgeId),i.caseNo,i.inDate,i.predmet,
+      i.parties.map(p=>`${p.name} (${p.role})`).join(', '),
+      i.decision?i.decision.type:'',i.decision?i.decision.date:'',c.icra.status
+    ].map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(';'));
+  }));
+  const blob=new Blob(['﻿'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`MPAS_reyestr_${type||'tam'}.csv`;a.click();
+  audit('Reyestr CSV ixrac edildi',type?typeN(type):'tam');
+  toast('CSV ixrac edildi — Excel-də açıla bilər');
+}
+
+/* ================= ADMİN PANEL ================= */
+let ATAB=0;
+function viewAdmin(){
+  const tabs=['Təşkilatlar','Struktur–Bölmə','Əməkdaşlar','Vəzifələr','Məhkəmələr','Hakimlər','Soraqçalar','Audit'];
+  let body='';
+  const misNote=`<div class="warn">Bu məlumatlar <b>MİS inteqrasiyası</b> əsasında avtomatik formalaşır (imitasiya). Əl ilə yaradılma/redaktə nəzərdə tutulmur.</div>`;
+  if(ATAB===0) body=misNote+`<div class="card"><table><tr><th>Kod</th><th>Təşkilat</th><th>İşlərin sayı</th></tr>
+    ${DB.orgs.map(o=>`<tr><td>${o.code}</td><td>${esc(o.name)}</td><td>${DB.cases.filter(c=>c.general.orgId===o.id).length}</td></tr>`).join('')}</table></div>`;
+  else if(ATAB===1) body=misNote+`<div class="card"><table><tr><th>Təşkilat</th><th>Struktur bölmə</th></tr>
+    ${DB.structs.map(s=>`<tr><td>${esc(orgN(s.orgId))}</td><td>${esc(s.name)}</td></tr>`).join('')}</table></div>`;
+  else if(ATAB===2) body=misNote+`<div class="card"><table><tr><th>Ad</th><th>Təşkilat / Bölmə</th><th>Vəzifə</th><th>Rol (MEİS)</th><th>Status</th></tr>
+    ${DB.employees.map(e=>`<tr><td>${esc(e.name)}</td><td>${esc(orgN(e.orgId))}<div class="mut">${esc(structN(e.structId))}</div></td><td>${esc((DB.positions.find(p=>p.id===e.posId)||{}).name)}</td><td>${e.role}</td><td>${e.active?'<span class="pill pl-green">Aktiv</span>':'<span class="pill pl-gray">Deaktiv</span>'}</td></tr>`).join('')}</table></div>`;
+  else if(ATAB===3) body=misNote+`<div class="card"><table><tr><th>Vəzifə</th></tr>${DB.positions.map(p=>`<tr><td>${esc(p.name)}</td></tr>`).join('')}</table></div>`;
+  else if(ATAB===4) body=`<div class="card"><div style="text-align:right;margin-bottom:8px"><button class="btn btn-p btn-sm" onclick="mCourt()">+ Məhkəmə</button></div>
+    <table><tr><th>Məhkəmə</th><th>İnstansiya</th><th>Növ</th></tr>
+    ${DB.courts.map(c=>`<tr><td>${esc(c.name)}</td><td>${INST_LEVELS[c.level]}</td><td>${esc(c.type)}</td></tr>`).join('')}</table></div>`;
+  else if(ATAB===5) body=`<div class="card"><div style="text-align:right;margin-bottom:8px"><button class="btn btn-p btn-sm" onclick="mJudge()">+ Hakim</button></div>
+    <table><tr><th>Hakim</th><th>Məhkəmə</th><th>İxtisas</th><th>Status</th><th></th></tr>
+    ${DB.judges.map(j=>`<tr><td>${esc(j.name)}</td><td>${esc(courtN(j.courtId))}</td><td>${esc(j.spec)}</td><td>${j.active?'<span class="pill pl-green">Aktiv</span>':'<span class="pill pl-gray">Deaktiv</span>'}</td>
+      <td><button class="btn btn-g btn-sm" onclick="j_toggle(${j.id})">${j.active?'Deaktiv et':'Aktiv et'}</button></td></tr>`).join('')}</table></div>`;
+  else if(ATAB===6){
+    body=Object.entries({caseStatus:'İş statusları',decisionTypes:'Qərar növləri',partyRoles:'Prosesual rollar',predmets:'İşin predmetləri',icraStatus:'İcra statusları'}).map(([key,title])=>`
+      <div class="card"><h3 style="font-size:14px;color:var(--blue-d);margin-bottom:8px">${title}</h3>
+      ${DB.refs[key].map((v,i)=>`<span class="chip">${esc(v)} <a href="#" style="color:var(--red)" onclick="refDel('${key}',${i});return false">✕</a></span>`).join('')}
+      <div style="display:flex;gap:8px;margin-top:8px;max-width:420px"><input id="ref_${key}" placeholder="Yeni dəyər"><button class="btn btn-s btn-sm" onclick="refAdd('${key}')">Əlavə et</button></div></div>`).join('');
+  }
+  else body=`<div class="card"><table><tr><th>Tarix</th><th>İstifadəçi</th><th>Əməliyyat</th><th>Detal</th></tr>
+    ${DB.audit.map(a=>`<tr><td>${a.t}</td><td>${esc(a.u)}</td><td>${esc(a.a)}</td><td class="mut">${esc(a.d)}</td></tr>`).join('')||'<tr><td class="mut">Boşdur</td></tr>'}</table></div>`;
+  return `<div class="pagehead"><h2>Admin Panel</h2><div class="sp"></div>
+      <button class="btn btn-s" onclick="exportJSON()">Məlumatları JSON saxla</button>
+      <label class="btn btn-g" style="display:inline-block">JSON yüklə<input type="file" accept=".json" style="display:none" onchange="importJSON(this)"></label></div>
+    <div class="tabs">${tabs.map((t,i)=>`<button class="tab ${ATAB===i?'act':''}" onclick="ATAB=${i};render()">${t}</button>`).join('')}</div>${body}`;
+}
+function mCourt(){
+  openModal(`<h3>Yeni məhkəmə</h3>
+    <div class="field"><label>Ad</label><input id="c_name"></div>
+    <div class="grid g2"><div class="field"><label>İnstansiya</label><select id="c_level">${Object.entries(INST_LEVELS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
+    <div class="field"><label>Növ</label><input id="c_type" value="Ümumi"></div></div>
+    <div class="foot"><button class="btn btn-g" onclick="closeModal()">İmtina</button>
+    <button class="btn btn-p" onclick="(function(){if(!c_name.value.trim())return;DB.courts.push({id:Math.max(...DB.courts.map(c=>c.id))+1,name:c_name.value,level:+c_level.value,type:c_type.value});audit('Məhkəmə əlavə edildi',c_name.value);closeModal();render()})()">Əlavə et</button></div>`);
+}
+function mJudge(){
+  openModal(`<h3>Yeni hakim</h3>
+    <div class="field"><label>Ad</label><input id="j_name"></div>
+    <div class="grid g2"><div class="field"><label>Məhkəmə</label><select id="j_court">${DB.courts.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></div>
+    <div class="field"><label>İxtisas</label><input id="j_spec" value="Mülki"></div></div>
+    <div class="foot"><button class="btn btn-g" onclick="closeModal()">İmtina</button>
+    <button class="btn btn-p" onclick="(function(){if(!j_name.value.trim())return;DB.judges.push({id:Math.max(...DB.judges.map(j=>j.id))+1,name:j_name.value,courtId:+j_court.value,spec:j_spec.value,active:true});audit('Hakim əlavə edildi',j_name.value);closeModal();render()})()">Əlavə et</button></div>`);
+}
+function j_toggle(id){const j=DB.judges.find(x=>x.id===id);j.active=!j.active;audit('Hakim statusu dəyişdirildi',j.name);render()}
+function refAdd(key){const v=$('ref_'+key).value.trim();if(!v)return;DB.refs[key].push(v);audit('Soraqçaya dəyər əlavə edildi',key+': '+v);render()}
+function refDel(key,i){const v=DB.refs[key][i];DB.refs[key].splice(i,1);audit('Soraqçadan dəyər silindi',key+': '+v);render()}
+function exportJSON(){
+  const blob=new Blob([JSON.stringify({seq:DB.seq,cases:DB.cases,courts:DB.courts,judges:DB.judges,refs:DB.refs,audit:DB.audit},null,1)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mpas_data.json';a.click();
+  toast('Məlumatlar JSON faylına saxlanıldı');
+}
+function importJSON(inp){
+  const f=inp.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);Object.assign(DB,{seq:d.seq,cases:d.cases,courts:d.courts,judges:d.judges,refs:d.refs,audit:d.audit||[]});toast('Məlumatlar yükləndi');render()}catch(e){toast('Fayl oxuna bilmədi')}};
+  r.readAsText(f);
+}
+</script>
+</body>
+</html>
