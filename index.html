@@ -15,7 +15,9 @@ body{font-family:"Segoe UI",system-ui,Arial,sans-serif;background:var(--bg);colo
 button{font-family:inherit;cursor:pointer}
 input,select,textarea{font-family:inherit;font-size:13px;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:#fff;width:100%}
 input:focus,select:focus,textarea:focus{outline:2px solid #9dbde4;border-color:var(--blue)}
+input[type=range]{padding:0;border:none}
 label{font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:3px}
+label .rq{color:var(--red)}
 .field{margin-bottom:10px}
 .btn{border:none;border-radius:7px;padding:8px 14px;font-size:13px;font-weight:600}
 .btn-p{background:var(--blue);color:#fff}.btn-p:hover{background:var(--blue-d)}
@@ -23,15 +25,13 @@ label{font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:3
 .btn-g{background:#eef1f5;color:#374151}
 .btn-r{background:#fee2e2;color:var(--red)}
 .btn-sm{padding:4px 9px;font-size:12px}
-/* login */
 #login{position:fixed;inset:0;background:linear-gradient(135deg,#123a68,#1b4f8a);display:flex;align-items:center;justify-content:center;z-index:100}
 .login-card{background:#fff;border-radius:14px;padding:34px;width:420px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
 .login-card h1{font-size:20px;color:var(--blue-d);margin-bottom:4px}
 .login-card .sub{color:var(--mut);font-size:12.5px;margin-bottom:20px}
 .badge-eimza{display:inline-block;background:var(--blue-l);color:var(--blue);font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;margin-bottom:14px}
-/* shell */
 #app{display:none;min-height:100vh}
-#side{position:fixed;top:0;left:0;bottom:0;width:240px;background:var(--blue-d);color:#dbe6f3;display:flex;flex-direction:column}
+#side{position:fixed;top:0;left:0;bottom:0;width:240px;background:var(--blue-d);color:#dbe6f3;display:flex;flex-direction:column;z-index:10}
 #side .logo{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.12)}
 #side .logo b{color:#fff;font-size:16px}
 #side .logo div{font-size:10.5px;opacity:.75;margin-top:3px;line-height:1.4}
@@ -50,7 +50,7 @@ label{font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:3
 .pagehead .sp{flex:1}
 .card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
 .grid{display:grid;gap:10px}
-.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th{background:#f1f5f9;text-align:left;padding:8px 9px;font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:#475569;border-bottom:1px solid var(--line)}
 td{padding:8px 9px;border-bottom:1px solid #edf1f5;vertical-align:top}
@@ -64,32 +64,31 @@ tr.rowlink:hover{background:var(--blue-l);cursor:pointer}
 .uid{font-family:Consolas,monospace;font-size:12px;color:var(--blue-d);font-weight:700}
 .mut{color:var(--mut);font-size:12px}
 .empty{padding:36px;text-align:center;color:var(--mut)}
-/* stats */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
 .stat{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
 .stat .n{font-size:24px;font-weight:700;color:var(--blue-d)}
 .stat .l{font-size:12px;color:var(--mut);margin-top:2px}
-/* tabs */
 .tabs{display:flex;gap:4px;border-bottom:2px solid var(--line);margin-bottom:14px;flex-wrap:wrap}
 .tab{padding:8px 14px;font-size:13px;font-weight:600;color:var(--mut);border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-2px}
 .tab.act{color:var(--blue);border-bottom-color:var(--blue)}
-/* modal */
 #ovl{position:fixed;inset:0;background:rgba(15,23,42,.5);display:none;align-items:flex-start;justify-content:center;z-index:50;overflow:auto;padding:40px 16px}
 #ovl.open{display:flex}
-.modal{background:#fff;border-radius:12px;width:640px;max-width:100%;padding:22px}
+.modal{background:#fff;border-radius:12px;width:720px;max-width:100%;padding:22px}
 .modal h3{font-size:16px;color:var(--blue-d);margin-bottom:14px}
 .modal .foot{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
-/* instance card */
 .inst{border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:8px;padding:14px;margin-bottom:12px;background:#fff}
 .inst h4{font-size:14px;color:var(--blue-d);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.kv{display:grid;grid-template-columns:170px 1fr;gap:4px 10px;font-size:12.5px;margin-top:8px}
+.kv{display:grid;grid-template-columns:230px 1fr;gap:4px 10px;font-size:12.5px;margin-top:8px}
 .kv .k{color:var(--mut)}
-.subl{font-size:12px;font-weight:700;color:#475569;margin:10px 0 4px;text-transform:uppercase;letter-spacing:.03em}
+.subl{font-size:12px;font-weight:700;color:#475569;margin:12px 0 4px;text-transform:uppercase;letter-spacing:.03em}
 .chip{display:inline-block;background:#f1f5f9;border:1px solid var(--line);border-radius:6px;padding:3px 8px;font-size:12px;margin:2px 3px 2px 0}
+.chip.arch{opacity:.5;text-decoration:line-through}
 .warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e;padding:8px 12px;border-radius:8px;font-size:12.5px;margin-bottom:10px}
 .toast{position:fixed;bottom:20px;right:20px;background:#111827;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;z-index:200;display:none}
 .filters{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:4px}
-@media(max-width:1100px){.filters{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.g3,.g4{grid-template-columns:1fr 1fr}}
+.slwrap{display:flex;gap:10px;align-items:center}
+.slwrap input[type=number]{width:110px}
+@media(max-width:1100px){.filters{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -119,7 +118,7 @@ tr.rowlink:hover{background:var(--blue-l);cursor:pointer}
 <div class="toast" id="toast"></div>
 
 <script>
-/* ================= SORAQÇALAR / İSTİNAD MƏLUMATLARI ================= */
+/* ================= SORAQÇALAR ================= */
 const CASE_TYPES = [
   {id:'mulki',   name:'Mülki işlər',          maxInst:3},
   {id:'inzibati',name:'İnzibati işlər',        maxInst:3},
@@ -128,7 +127,6 @@ const CASE_TYPES = [
 ];
 const INST_LEVELS = {1:'I instansiya', 2:'Apellyasiya instansiyası', 3:'Kassasiya instansiyası'};
 
-// MİS inteqrasiyası (imitasiya) — təşkilatlar, strukturlar, əməkdaşlar, vəzifələr
 const DB = {
   orgs:[
     {id:1,name:'ƏƏSMN — Nazirlik Aparatı',code:'AP'},
@@ -150,11 +148,11 @@ const DB = {
     {id:4,name:'Aparıcı məsləhətçi'},{id:5,name:'Hüquqşünas'}
   ],
   employees:[
-    {id:1,fin:'1A2B3C4',name:'Səlimova Fidan Qalib qızı',orgId:1,structId:2,posId:1,role:'admin',active:true},
-    {id:2,fin:'5D6E7F8',name:'İsmayılov Fərid Sabir oğlu',orgId:2,structId:4,posId:2,role:'employee',active:true},
-    {id:3,fin:'9G8H7J6',name:'Məmmədov Elvin Rauf oğlu',orgId:1,structId:2,posId:3,role:'employee',active:true},
-    {id:4,fin:'2K3L4M5',name:'Quliyeva Aysel Namiq qızı',orgId:3,structId:5,posId:4,role:'employee',active:true},
-    {id:5,fin:'7N8P9Q1',name:'Həsənov Tural İlham oğlu',orgId:1,structId:1,posId:3,role:'viewer',active:true}
+    {id:1,fin:'1A2B3C4',name:'Əməkdaş A (Admin)',orgId:1,structId:2,posId:1,role:'admin',active:true},
+    {id:2,fin:'5D6E7F8',name:'Əməkdaş B (DSMF)',orgId:2,structId:4,posId:2,role:'employee',active:true},
+    {id:3,fin:'9G8H7J6',name:'Əməkdaş C (Aparat)',orgId:1,structId:2,posId:3,role:'employee',active:true},
+    {id:4,fin:'2K3L4M5',name:'Əməkdaş D (DOST)',orgId:3,structId:5,posId:4,role:'employee',active:true},
+    {id:5,fin:'7N8P9Q1',name:'Əməkdaş E (Nəzarət)',orgId:1,structId:1,posId:3,role:'viewer',active:true}
   ],
   courts:[
     {id:1,name:'Bakı İnzibati Məhkəməsi',level:1,type:'İnzibati'},
@@ -175,12 +173,35 @@ const DB = {
     {id:7,courtId:6,name:'Hakim M.Cəfərov',spec:'Kassasiya',active:true},
     {id:8,courtId:5,name:'Hakim K.İbrahimov',spec:'Apellyasiya',active:true}
   ],
-  // Soraqçalar
   refs:{
-    caseStatus:['Baxılır','Təxirə salınıb','Dayandırılıb','Yekunlaşıb','İcraatdadır','Arxivləşdirilib'],
+    workStatus:['Davam edir','Yekunlaşmış'],
+    neticeDavam:['İcraatdadır','Cavabdeh əvəz edilib — Nazirlik qurumu ilə'],
+    neticeYekun:['Leyhinə','Əleyhinə','Üçüncü şəxs','Cavabdeh əvəz edilib digər qurumla'],
+    instStatus:['Baxılır','Təxirə salınıb','Dayandırılıb','Yekunlaşıb'],
     decisionTypes:['Qismən təmin','Tam təmin','Rədd edilib','İcraata xitam','Geri qaytarılıb','Ləğv edilib','Dəyişdirilib','Qüvvədə saxlanılıb'],
-    partyRoles:['İddiaçı','Cavabdeh','Üçüncü şəxs','Ərizəçi','Maraqlı şəxs','Zərərçəkmiş','Təqsirləndirilən'],
+    partyRoles:['İddiaçı','Cavabdeh','Üçüncü şəxs','Ərizəçi','Maraqlı şəxs','Zərərçəkmiş','Təqsirləndirilən','İttiham tərəfi','Müdafiə tərəfi'],
     predmets:['Pensiya təyinatı','Müavinət','Ünvanlı sosial yardım','Əmək mübahisəsi','Ödənişin geri tutulması','İnzibati xəta protokolu','Digər'],
+    predmetDetallari:['Yaşa görə pensiya','Əlilliyə görə pensiya','Ailə başçısını itirməyə görə','Sosial müavinət','Digər'],
+    altpredmetler:['Təyinatdan imtina','Yenidən hesablama','Ödənişin dayandırılması','Artıq ödənişin tutulması','Digər'],
+    iddiaTelebleri:['Qərarın ləğvi','Öhdəliyin icrası','Ziyanın ödənilməsi','Ödənişin bərpası','Digər'],
+    imtinaEsaslari:['İş stajının çatışmaması','Sənədlərin natamamlığı','Hüquqi əsasın olmaması','Müddətin ötürülməsi','Digər'],
+    iddiaNeticeleri:['Təmin edilib','Qismən təmin edilib','Rədd edilib','İcraata xitam verilib','Baxılmamış saxlanılıb'],
+    sikayetNeticeleri:['Təmin edilib','Qismən təmin edilib','Rədd edilib','Baxılmamış saxlanılıb','Geri qaytarılıb'],
+    tesirler:['Leyhinə','Əleyhinə','Qismən leyhinə','Təsiri yoxdur'],
+    muddetler:['1 ay','2 ay','3 ay','Müddət bərpa edilib','Müddət ötürülüb'],
+    eleyhineEsaslari:['Sübutların qiymətləndirilməsi','Prosessual pozuntu','Maddi hüquq normasının tətbiqi','Ekspertiza rəyi','Digər'],
+    iclasNovleri:['Hazırlıq iclası','Məhkəmə baxışı','Qərarın elanı','Barışıq iclası','Digər'],
+    istirak:['İştirak edilib','İştirak edilməyib','Onlayn iştirak'],
+    ixmMaddeleri:['192.1','430.1','548.1','598.2','602.1','Digər'],
+    cmMaddeleri:['178.3.2','179.3.2','308.1','311.3.1','312-1.1','313','Digər'],
+    sexsStatusu:['Fiziki şəxs','Vəzifəli şəxs','Hüquqi şəxs'],
+    organlar:['DİN','Baş Prokurorluq','DTX','İqtisadi Məhkəmə Ekspertizası','Vergi orqanı','Digər'],
+    qerarNovu:['Elektron','Kağız'],
+    behli:['Bəli','Xeyr'],
+    apellantlar:['Qurum (Nazirlik/tabeli qurum)','Qarşı tərəf','Prokuror','Üçüncü şəxs'],
+    qetimkanTedbirleri:['Həbs','Ev dustaqlığı','Polisin nəzarəti altına vermə','Şəxsi zaminlik','Girov','Ölkədən getməmək barədə iltizam'],
+    qetimkanSecen:['Məhkəmə','Prokuror','Müstəntiq'],
+    hazirliqQerarlari:['Məhkəmə baxışı təyin edilib','İş prokurora qaytarılıb','İcraata xitam verilib','Digər'],
     icraStatus:['İcraya yönəldilməyib','İcradadır','İcra edilib','İcra dayandırılıb']
   },
   seq: 4,
@@ -188,11 +209,175 @@ const DB = {
   audit: []
 };
 
-// İAMAS / DVX imitasiya bazası
+const REF_LABELS = {
+  workStatus:'Məhkəmə işinin statusları',neticeDavam:'Nəticələr (davam edən işlər)',neticeYekun:'Nəticələr (yekunlaşmış işlər)',
+  instStatus:'İnstansiya statusları',decisionTypes:'Qərar növləri',partyRoles:'Prosesual rollar',predmets:'İşin predmetləri',
+  predmetDetallari:'Predmetin detalları',altpredmetler:'Altpredmetlər',iddiaTelebleri:'İddia tələbləri',imtinaEsaslari:'İmtina əsasları',
+  iddiaNeticeleri:'İddia nəticələri',sikayetNeticeleri:'Şikayət nəticələri',tesirler:'Quruma təsir növləri',muddetler:'Şikayət/kassasiya müddətləri',
+  eleyhineEsaslari:'Əleyhinə yekunlaşma əsasları',iclasNovleri:'İclas növləri',istirak:'İştirak statusları',ixmMaddeleri:'İXM maddələri',
+  cmMaddeleri:'CM maddələri',sexsStatusu:'Şəxsin statusları',organlar:'Orqanlar',qerarNovu:'Qərar formaları',behli:'Bəli/Xeyr',
+  apellantlar:'Apelyant/Kassator seçimləri',qetimkanTedbirleri:'Qətimkan tədbirləri',qetimkanSecen:'Qətimkan tədbirini seçənlər',
+  hazirliqQerarlari:'Hazırlıq iclası qərarları',icraStatus:'İcra statusları'
+};
+
+/* ================= SAHƏ SXEMLƏRİ (xlsx tələb cədvəllərinə əsasən) ================= */
+const T=(k,l,x)=>({k,l,t:'text',...x}), D=(k,l,x)=>({k,l,t:'date',...x}),
+      S=(k,l,o,x)=>({k,l,t:'select',o,...x}), SL=(k,l,x)=>({k,l,t:'slider',...x}),
+      M=(k,l,o,x)=>({k,l,t:'multi',o,...x}), A=(k,l,x)=>({k,l,t:'area',...x});
+
+// Ümumi qaydalar: nəticə statusdan asılıdır; "Əleyhinə" seçiləndə əsas xanası aktivləşir
+const NETICE = S('netice','Məhkəmə işinin nəticəsi',v=>v.status==='Davam edir'?'neticeDavam':'neticeYekun',{trig:1,show:v=>!!v.status});
+const ELEYHINE_G = S('eleyhineEsas','İşin əleyhinə yekunlaşması əsası','eleyhineEsaslari',{show:v=>v.netice==='Əleyhinə'});
+const ELEYHINE_I = S('eleyhineEsas','İşin əleyhinə yekunlaşması əsası','eleyhineEsaslari',{show:v=>v.netice==='Əleyhinə'||v.sikayetNetice==='Əleyhinə'});
+const YEKUN_REQ = D('yekunTarix','Yekun qərarın tarixi',{req:v=>!!(v.netice||v.sikayetNetice)});
+
+const SCHEMAS = {
+  mulki:{
+    general:[
+      S('status','Məhkəmə işinin statusu','workStatus',{trig:1}), NETICE,
+      S('iddiaTelebi','İddia tələbi','iddiaTelebleri'),
+      S('predmetDetal','Predmetin detalı','predmetDetallari'),
+      S('altpredmet','Altpredmet','altpredmetler'),
+      S('imtinaEsasi','İmtina əsası','imtinaEsaslari'),
+      T('esdas','Daxil olan məhkəmə işinin ESDAS nömrəsi')
+    ],
+    inst:{
+      1:[D('bildirisTarix','Məhkəmə bildirişinin daxil olduğu tarix'),
+         S('tesir','Qərarın nəticəsinin quruma təsiri','tesirler'),
+         S('netice','İddianın nəticəsi','iddiaNeticeleri',{trig:1}),
+         T('neticeQeyd','İddianın nəticəsi ilə bağlı qeyd'), YEKUN_REQ,
+         D('yekunDaxil','Yekun qərarın daxilolma tarixi'),
+         S('etiraz','Etiraz və vəsatət','behli')],
+      2:[S('apellant','Apelyant','apellantlar'),
+         D('sikayetTarix','Şikayətin tarixi'),
+         S('sikayetSureti','Şikayətin surəti','behli'),
+         D('bildirisTarix','Məhkəmə bildirişinin daxil olduğu tarix'),
+         S('tesir','Qərarın nəticəsinin quruma təsiri','tesirler'),
+         S('sikayetMuddet','Şikayətin müddəti','muddetler'),
+         S('sikayetNetice','Şikayətin nəticəsi','sikayetNeticeleri',{trig:1}),
+         T('neticeQeyd','Şikayətin nəticəsi ilə bağlı qeyd'), YEKUN_REQ,
+         D('yekunDaxil','Yekun qərarın daxilolma tarixi')],
+      3:[S('kassator','Kassator','apellantlar'),
+         D('sikayetTarix','Şikayətin tarixi'),
+         D('bildirisTarix','Məhkəmə bildirişinin daxil olduğu tarix'),
+         S('tesir','Qərarın nəticəsinin quruma təsiri','tesirler'),
+         S('kassMuddet','Kassasiya müddəti','muddetler'),
+         S('sikayetNetice','Şikayətin nəticəsi','sikayetNeticeleri',{trig:1}),
+         T('neticeQeyd','Şikayətin nəticəsi ilə bağlı qeyd'), YEKUN_REQ,
+         D('yekunDaxil','Yekun qərarın daxilolma tarixi')]
+    }
+  },
+  xeta:{
+    general:[
+      T('sikayetci','Şikayətçi'),
+      S('sexsStatus','Şəxsin statusu (hüquqi/vəzifəli/fiziki)','sexsStatusu'),
+      T('finVoen','Vətəndaşın FİN-i / müəssisənin VÖEN-i'),
+      S('ixmMadde','İXM-nin maddəsi','ixmMaddeleri'),
+      S('aidQurum','Aidiyyəti qurum','organlar'),
+      T('esdas','Yeni daxil olan məhkəmə işinin ESDAS nömrəsi'),
+      S('status','Məhkəmə işinin statusu','workStatus',{trig:1}), NETICE, ELEYHINE_G,
+      S('tesir','Məhkəmə nəticəsinin quruma təsiri','tesirler'),
+      S('protokolOrqan','Protokol tərtib etmiş orqanın adı','organlar'),
+      T('mufettis','Protokolu tərtib etmiş müfəttişin ad/soyadı'),
+      D('protokolTarix','Protokolun tarixi'),
+      T('protokolNo','Protokolun nömrəsi'),
+      S('prok','İşin prokurorluqdan daxil olub-olmaması','behli',{trig:1}),
+      D('prokTarix','Prokurorluq qərarının tarixi',{show:v=>v.prok==='Bəli'}),
+      T('prokNo','Prokurorluq qərarının nömrəsi',{show:v=>v.prok==='Bəli'}),
+      T('prokOrqan','Prokurorluq orqanının adı',{show:v=>v.prok==='Bəli'}),
+      S('tenbehNov','İnzibati tənbehvermə qərarının növü','qerarNovu'),
+      D('tenbehTarix','Tənbehvermə qərarının tarixi'),
+      T('tenbehNo','Tənbehvermə qərarının nömrəsi'),
+      SL('cerime','Cərimə məbləği (AZN)'),
+      T('yekunQeyd','İşin yekun nəticəsi ilə bağlı qeyd')
+    ],
+    inst:{
+      1:[D('bildirisTarix','Məhkəmə bildirişinin daxil olduğu tarix'),
+         T('numayende','Qurumu təmsil edən hüquqşünas-nümayəndə'),
+         S('etiraz','Etiraz və ya vəsatət','behli'),
+         S('tesir','Qərarın nəticəsinin quruma təsiri','tesirler'),
+         S('netice','Nəticə','iddiaNeticeleri',{trig:1}),
+         T('neticeQeyd','Nəticə ilə bağlı qeyd'), YEKUN_REQ, ELEYHINE_I,
+         D('qerarDaxil','Qərarın quruma daxil olma tarixi'),
+         D('sikayetSon','Şikayət üçün son tarix'),
+         S('sikayetMuddet','Şikayət müddəti','muddetler'),
+         SL('tenbeh','Tətbiq edilən inzibati tənbeh tədbiri (AZN)'),
+         A('elaveQeyd','Əlavə qeydlər')],
+      2:[S('apellant','Apelyant','apellantlar'),
+         D('sikayetTarix','Şikayətin tarixi'),
+         S('sikayetSureti','Şikayətin (protestin) surəti','behli'),
+         D('bildirisTarix','Məhkəmə bildirişinin daxil olduğu tarix'),
+         T('numayende','Qurumu təmsil edən hüquqşünas-nümayəndə'),
+         S('tesir','Qərarın nəticəsinin quruma təsiri','tesirler'),
+         S('sikayetNetice','Nəticə','sikayetNeticeleri',{trig:1}),
+         T('neticeQeyd','Şikayətin nəticəsi ilə bağlı qeyd'), YEKUN_REQ, ELEYHINE_I,
+         D('qerarDaxil','Qərarın quruma daxil olma tarixi'),
+         SL('cerime','Qərara əsasən tətbiq edilən cərimənin məbləği (AZN)'),
+         A('elaveQeyd','Əlavə qeydlər')]
+    }
+  },
+  cinayet:{
+    general:[
+      S('aidQurum','Aidiyyəti qurum','organlar'),
+      T('esdas','Yeni daxil olan məhkəmə işinin ESDAS nömrəsi'),
+      S('status','Məhkəmə işinin statusu','workStatus',{trig:1}), NETICE,
+      M('arasdirmaOrqan','Araşdırmanı və ya istintaqı aparan orqan','organlar'),
+      T('muracietEden','Hüquq mühafizə orqanına müraciət edən şəxs (qurum)'),
+      T('cinIsNo','Cinayət işinin başlanması haqqında qərarın nömrəsi'),
+      T('istintaqci','Cinayət işi üzrə istintaq aparan şəxs'),
+      M('cmMadde','CM-nin maddəsi','cmMaddeleri'),
+      T('zerercekmis','Zərərçəkmiş qismində tanınmış qurum və ya şəxs'),
+      S('qetimkan','Təqsirləndirilən şəxs barəsində qətimkan tədbiri','qetimkanTedbirleri'),
+      S('qetimkanSecen','Qətimkan tədbirini seçən şəxs və ya məhkəmə','qetimkanSecen'),
+      D('qetimkanTarix','Qətimkan tədbiri haqqında qərarın tarixi'),
+      T('ziyanQeyd','İstintaq dövründə dəymiş ziyanın ödənilməsinə dair qeyd'),
+      T('mulkiIddiaQeyd','İstintaq dövründə mülki iddianın verilməsinə dair qeyd'),
+      T('barisiqQeyd','İstintaq dövründə barışığın əldə olunmasına dair qeyd')
+    ],
+    inst:{
+      1:[T('ittihamAkti','İttiham aktının təqdim olunmasına dair qeyd'),
+         D('bildirisTarix','Məhkəmə bildirişinin daxil olduğu tarix'),
+         T('numayende','Qurumu təmsil edən hüquqşünas-nümayəndə'),
+         S('hazirliqQerar','Hazırlıq iclası nəticəsində qəbul edilmiş qərar','hazirliqQerarlari'),
+         S('yekunAkt','I instansiya məhkəməsinin yekun aktı','behli'),
+         T('mulkiIddiaHell','Mülki iddianın həll edilməsinə dair qeyd'),
+         T('barisiq','Məhkəmə prosesi zamanı barışığın əldə olunmasına dair qeyd'),
+         D('yekunTarix','Yekun qərarın tarixi'),
+         D('qerarDaxil','Qərarın quruma daxil olma tarixi'),
+         D('sikayetSon','Şikayət üçün son tarix'),
+         S('sikayetMuddet','Şikayət müddəti','muddetler'),
+         S('tesir','Qərarın nəticəsinin quruma təsiri','tesirler'),
+         A('elaveQeyd','Əlavə qeydlər')],
+      2:[S('apellant','Apelyant','apellantlar'),
+         D('sikayetTarix','Şikayətin tarixi'),
+         S('sikayetSureti','Şikayətin surəti','behli'),
+         D('bildirisTarix','Məhkəmə bildirişinin daxil olduğu tarix'),
+         T('numayende','Qurumu təmsil edən hüquqşünas-nümayəndə'),
+         S('tesir','Qərarın nəticəsinin quruma təsiri','tesirler'),
+         S('sikayetNetice','Şikayətin nəticəsi','sikayetNeticeleri'),
+         D('yekunTarix','Yekun qərarın tarixi'),
+         D('yekunDaxil','Yekun qərarın daxilolma tarixi'),
+         D('sikayetSon','Şikayət üçün son tarix'),
+         S('kassMuddet','Kassasiya müddəti','muddetler'),
+         A('elaveQeyd','Əlavə qeyd')],
+      3:[S('kassator','Kassator','apellantlar'),
+         D('sikayetTarix','Şikayətin tarixi'),
+         S('sikayetSureti','Şikayətin surəti','behli'),
+         D('bildirisTarix','Məhkəmə bildirişinin daxil olduğu tarix'),
+         T('numayende','Qurumu təmsil edən hüquqşünas-nümayəndə'),
+         S('tesir','Qərarın nəticəsinin quruma təsiri','tesirler'),
+         S('sikayetNetice','Şikayətin nəticəsi','sikayetNeticeleri'),
+         D('yekunTarix','Yekun qərarın tarixi'),
+         A('elaveQeyd','Əlavə qeyd')]
+    }
+  }
+};
+SCHEMAS.inzibati = SCHEMAS.mulki; // xlsx: "Mülki və inzibati işlər" eyni sxem
+
 const IAMAS = {
-  '5AZE12R':{name:'Rəsulov Kamran Adil oğlu',dob:'14.03.1979'},
-  '7BXK93T':{name:'Nağıyeva Sevinc Faiq qızı',dob:'02.11.1985'},
-  '3QWE45Y':{name:'Bayramov Orxan Zaur oğlu',dob:'21.07.1990'}
+  '5AZE12R':{name:'Test Şəxs 1',dob:'14.03.1979'},
+  '7BXK93T':{name:'Test Şəxs 2',dob:'02.11.1985'},
+  '3QWE45Y':{name:'Test Şəxs 3',dob:'21.07.1990'}
 };
 const DVX = {
   '1234567890':{name:'"Aqro-Servis" MMC',addr:'Bakı ş., Nizami r.'},
@@ -203,46 +388,54 @@ const DVX = {
 /* ================= NÜMUNƏ İŞLƏR ================= */
 function seedCases(){
   DB.cases = [
-    {uid:'MPAS-2026-000001',type:'mulki',status:'Baxılır',
-     general:{orgId:2,structId:3,repName:'İsmayılov Fərid',factStart:'2026-02-10',orgStart:'2026-02-14',note:'Nazirlik prosesə üçüncü şəxs qismində cəlb olunub'},
+    {uid:'MPAS-2026-000001',type:'mulki',status:'Davam edir',
+     general:{orgId:2,structId:3,repName:'Əməkdaş B',factStart:'2026-02-10',orgStart:'',note:'Nazirlik prosesə üçüncü şəxs qismində cəlb olunub',
+       extra:{status:'Davam edir',netice:'İcraatdadır',iddiaTelebi:'Ödənişin bərpası',predmetDetal:'Əlilliyə görə pensiya',esdas:'ESDAS-2026-1123'}},
      icra:{status:'İcraya yönəldilməyib',note:''},
      instances:[
-       {level:1,courtId:2,judgeId:3,caseNo:'2(005)-1123/2026',inDate:'2026-02-14',predmet:'Pensiya təyinatı',
-        parties:[{kind:'F',code:'5AZE12R',name:'Rəsulov Kamran Adil oğlu',role:'İddiaçı'},{kind:'Q',code:'',name:'DSMF',role:'Cavabdeh'}],
-        hearings:[{date:'2026-03-05',note:'İlkin iclas'},{date:'2026-04-02',note:'Ekspertiza təyin edildi'}],
-        decision:null,status:'Baxılır'}
-     ],history:[{t:'2026-02-14 10:12',u:'İsmayılov Fərid',a:'İş yaradıldı'}]},
-    {uid:'MPAS-2026-000002',type:'inzibati',status:'Yekunlaşıb',
-     general:{orgId:1,structId:2,repName:'Məmmədov Elvin',factStart:'2025-11-20',orgStart:'2025-11-20',note:''},
-     icra:{status:'İcra edilib',note:'Qərar üzrə ödəniş 12.05.2026-da icra edilib'},
+       {level:1,courtId:2,judgeId:3,caseNo:'2(005)-1123/2026',inDate:'2026-02-14',predmet:'Pensiya təyinatı',status:'Baxılır',decision:null,
+        extra:{bildirisTarix:'2026-02-12',etiraz:'Xeyr'},
+        parties:[{kind:'F',code:'5AZE12R',name:'Test Şəxs 1',role:'İddiaçı',addr:'Bakı ş.',arch:false},{kind:'Q',code:'',name:'DSMF',role:'Cavabdeh',addr:'',arch:false}],
+        hearings:[{date:'2026-03-05',time:'11:00',type:'Hazırlıq iclası',rep:'Əməkdaş B',attend:'İştirak edilib',note:''},{date:'2026-04-02',time:'15:30',type:'Məhkəmə baxışı',rep:'Əməkdaş B',attend:'İştirak edilib',note:'Ekspertiza təyin edildi'}]}
+     ],history:[{t:'2026-02-14 10:12',u:'Əməkdaş B',a:'İş yaradıldı'}]},
+    {uid:'MPAS-2026-000002',type:'inzibati',status:'Yekunlaşmış',
+     general:{orgId:1,structId:2,repName:'Əməkdaş C',factStart:'2025-11-20',orgStart:'2026-04-20',note:'',
+       extra:{status:'Yekunlaşmış',netice:'Leyhinə',iddiaTelebi:'Qərarın ləğvi',imtinaEsasi:'Hüquqi əsasın olmaması',esdas:'ESDAS-2025-8812'}},
+     icra:{status:'İcra edilib',note:'Qərar üzrə icra 12.05.2026-da tamamlanıb'},
      instances:[
-       {level:1,courtId:1,judgeId:1,caseNo:'e-2026-77812',inDate:'2025-11-24',predmet:'Ünvanlı sosial yardım',
-        parties:[{kind:'F',code:'7BXK93T',name:'Nağıyeva Sevinc Faiq qızı',role:'İddiaçı'},{kind:'Q',code:'',name:'ƏƏSMN',role:'Cavabdeh'}],
-        hearings:[{date:'2026-01-15',note:''}],
-        decision:{type:'Rədd edilib',date:'2026-01-15',note:'İddia təmin edilmədi'},status:'Yekunlaşıb'},
-       {level:2,courtId:4,judgeId:6,caseNo:'2-1(103)-456/2026',inDate:'2026-02-08',predmet:'Ünvanlı sosial yardım',
-        parties:[{kind:'F',code:'7BXK93T',name:'Nağıyeva Sevinc Faiq qızı',role:'Ərizəçi'},{kind:'Q',code:'',name:'ƏƏSMN',role:'Cavabdeh'}],
-        hearings:[{date:'2026-04-20',note:''}],
-        decision:{type:'Qüvvədə saxlanılıb',date:'2026-04-20',note:''},status:'Yekunlaşıb'}
-     ],history:[{t:'2025-11-24 09:00',u:'Məmmədov Elvin',a:'İş yaradıldı'},{t:'2026-02-08 14:30',u:'Məmmədov Elvin',a:'Apellyasiya instansiyası əlavə edildi'}]},
-    {uid:'MPAS-2026-000003',type:'xeta',status:'Baxılır',
-     general:{orgId:4,structId:6,repName:'Quliyeva Aysel',factStart:'2026-05-03',orgStart:'2026-05-03',note:''},
+       {level:1,courtId:1,judgeId:1,caseNo:'e-2026-77812',inDate:'2025-11-24',predmet:'Ünvanlı sosial yardım',status:'Yekunlaşıb',
+        decision:{type:'Rədd edilib',date:'2026-01-15',note:'İddia təmin edilmədi'},
+        extra:{bildirisTarix:'2025-11-22',tesir:'Leyhinə',netice:'Rədd edilib',yekunTarix:'2026-01-15',yekunDaxil:'2026-01-22',etiraz:'Xeyr'},
+        parties:[{kind:'F',code:'7BXK93T',name:'Test Şəxs 2',role:'İddiaçı',addr:'',arch:false},{kind:'Q',code:'',name:'ƏƏSMN',role:'Cavabdeh',addr:'',arch:false}],
+        hearings:[{date:'2026-01-15',time:'10:00',type:'Qərarın elanı',rep:'Əməkdaş C',attend:'İştirak edilib',note:''}]},
+       {level:2,courtId:4,judgeId:6,caseNo:'2-1(103)-456/2026',inDate:'2026-02-08',predmet:'Ünvanlı sosial yardım',status:'Yekunlaşıb',
+        decision:{type:'Qüvvədə saxlanılıb',date:'2026-04-20',note:''},
+        extra:{apellant:'Qarşı tərəf',sikayetTarix:'2026-02-01',sikayetSureti:'Bəli',tesir:'Leyhinə',sikayetMuddet:'1 ay',sikayetNetice:'Rədd edilib',yekunTarix:'2026-04-20',yekunDaxil:'2026-04-27'},
+        parties:[{kind:'F',code:'7BXK93T',name:'Test Şəxs 2',role:'Ərizəçi',addr:'',arch:false},{kind:'Q',code:'',name:'ƏƏSMN',role:'Cavabdeh',addr:'',arch:false}],
+        hearings:[{date:'2026-04-20',time:'12:00',type:'Məhkəmə baxışı',rep:'Əməkdaş C',attend:'İştirak edilib',note:''}]}
+     ],history:[{t:'2025-11-24 09:00',u:'Əməkdaş C',a:'İş yaradıldı'},{t:'2026-02-08 14:30',u:'Əməkdaş C',a:'Apellyasiya instansiyası əlavə edildi'}]},
+    {uid:'MPAS-2026-000003',type:'xeta',status:'Davam edir',
+     general:{orgId:4,structId:6,repName:'Əməkdaş D',factStart:'2026-05-03',orgStart:'',note:'',
+       extra:{sikayetci:'"Aqro-Servis" MMC',sexsStatus:'Hüquqi şəxs',finVoen:'1234567890',ixmMadde:'598.2',status:'Davam edir',netice:'İcraatdadır',
+              protokolOrqan:'Vergi orqanı',protokolTarix:'2026-04-28',protokolNo:'PR-2026-0345',prok:'Xeyr',tenbehNov:'Elektron',cerime:1500,esdas:'ESDAS-2026-3390'}},
      icra:{status:'İcraya yönəldilməyib',note:''},
      instances:[
-       {level:1,courtId:3,judgeId:4,caseNo:'3(006)-889/2026',inDate:'2026-05-06',predmet:'İnzibati xəta protokolu',
-        parties:[{kind:'H',code:'1234567890',name:'"Aqro-Servis" MMC',role:'Cavabdeh'}],
-        hearings:[],decision:null,status:'Baxılır'}
-     ],history:[{t:'2026-05-06 11:40',u:'Quliyeva Aysel',a:'İş yaradıldı'}]}
+       {level:1,courtId:3,judgeId:4,caseNo:'3(006)-889/2026',inDate:'2026-05-06',predmet:'İnzibati xəta protokolu',status:'Baxılır',decision:null,
+        extra:{bildirisTarix:'2026-05-05',numayende:'Əməkdaş D',etiraz:'Xeyr'},
+        parties:[{kind:'H',code:'1234567890',name:'"Aqro-Servis" MMC',role:'Cavabdeh',addr:'Bakı ş., Nizami r.',arch:false}],
+        hearings:[]}
+     ],history:[{t:'2026-05-06 11:40',u:'Əməkdaş D',a:'İş yaradıldı'}]}
   ];
 }
 seedCases();
 
 /* ================= VƏZİYYƏT ================= */
 let USER=null, VIEW={page:'list',type:'mulki'}, DETAIL=null;
+let TMP={}, REDRAW=null;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const now=()=>{const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`};
-const fmtD=s=>s?s.split('-').reverse().join('.'):'—';
+const fmtD=s=>s?String(s).split('-').reverse().join('.'):'—';
 const orgN=id=>(DB.orgs.find(o=>o.id==id)||{}).name||'—';
 const structN=id=>(DB.structs.find(s=>s.id==id)||{}).name||'—';
 const courtN=id=>(DB.courts.find(c=>c.id==id)||{}).name||'—';
@@ -252,14 +445,60 @@ function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';set
 function audit(a,d){DB.audit.unshift({t:now(),u:USER?USER.name:'sistem',a,d:d||''})}
 function chist(c,a){c.history.unshift({t:now(),u:USER.name,a})}
 function statusPill(s){
-  const m={'Baxılır':'pl-blue','Yekunlaşıb':'pl-green','Dayandırılıb':'pl-amber','Təxirə salınıb':'pl-amber','İcraatdadır':'pl-blue','Arxivləşdirilib':'pl-gray'};
+  const m={'Davam edir':'pl-blue','Yekunlaşmış':'pl-green','Baxılır':'pl-blue','Yekunlaşıb':'pl-green','Dayandırılıb':'pl-amber','Təxirə salınıb':'pl-amber','İcradadır':'pl-blue','İcra edilib':'pl-green','İcraya yönəldilməyib':'pl-gray','İcra dayandırılıb':'pl-amber'};
   return `<span class="pill ${m[s]||'pl-gray'}">${esc(s)}</span>`;
 }
-const can=p=>{ // sadə səlahiyyət modeli (MEİS rolları imitasiyası)
+const can=p=>{
   if(USER.role==='admin') return true;
   if(USER.role==='employee') return p!=='admin';
-  return p==='read'||p==='report'; // viewer
+  return p==='read'||p==='report';
 };
+
+/* ================= DİNAMİK SAHƏLƏR ================= */
+function refOpts(o,store){const k=typeof o==='function'?o(store):o;return DB.refs[k]||[]}
+function dynRender(fields,store,pfx){
+  return fields.map(f=>{
+    if(f.show&&!f.show(store)) return '';
+    const req=f.req&&f.req(store);
+    const lab=`<label>${esc(f.l)}${req?' <span class="rq">*</span>':''}</label>`;
+    const v=store[f.k]??'';
+    const oc=`dset('${pfx}','${f.k}',this.value${f.trig?',1':''})`;
+    if(f.t==='text') return `<div class="field">${lab}<input value="${esc(v)}" onchange="${oc}"></div>`;
+    if(f.t==='area') return `<div class="field" style="grid-column:1/-1">${lab}<textarea rows="2" onchange="${oc}">${esc(v)}</textarea></div>`;
+    if(f.t==='date') return `<div class="field">${lab}<input type="date" value="${esc(v)}" onchange="${oc}"></div>`;
+    if(f.t==='select'){
+      const opts=refOpts(f.o,store);
+      return `<div class="field">${lab}<select onchange="${oc}"><option value="">— seçin —</option>${opts.map(o=>`<option ${v===o?'selected':''}>${esc(o)}</option>`).join('')}</select></div>`;
+    }
+    if(f.t==='slider'){
+      const n=+v||0;
+      return `<div class="field" style="grid-column:1/-1">${lab}<div class="slwrap">
+        <input type="range" min="0" max="50000" step="1" value="${n}" oninput="this.parentElement.querySelector('input[type=number]').value=this.value" onchange="dset('${pfx}','${f.k}',+this.value)">
+        <input type="number" min="0" max="50000" value="${n}" oninput="this.parentElement.querySelector('input[type=range]').value=this.value" onchange="dset('${pfx}','${f.k}',+this.value)"> AZN</div></div>`;
+    }
+    if(f.t==='multi'){
+      const arr=Array.isArray(v)?v:[];
+      const opts=refOpts(f.o,store).filter(o=>!arr.includes(o));
+      return `<div class="field" style="grid-column:1/-1">${lab}
+        <div>${arr.map((a,i)=>`<span class="chip">${esc(a)} <a href="#" style="color:var(--red)" onclick="dmdel('${pfx}','${f.k}',${i});return false">✕</a></span>`).join('')||'<span class="mut">Seçilməyib</span>'}</div>
+        <div style="display:flex;gap:8px;margin-top:6px;max-width:420px">
+          <select id="dm_${pfx}_${f.k}">${opts.map(o=>`<option>${esc(o)}</option>`).join('')}</select>
+          <button class="btn btn-s btn-sm" type="button" onclick="dmadd('${pfx}','${f.k}')">Əlavə et</button></div></div>`;
+    }
+    return '';
+  }).join('');
+}
+function dset(pfx,k,v,rerender){TMP[pfx]=TMP[pfx]||{};TMP[pfx][k]=v;if(rerender&&REDRAW)REDRAW()}
+function dmadd(pfx,k){const s=$('dm_'+pfx+'_'+k);if(!s||!s.value)return;const st=TMP[pfx];st[k]=Array.isArray(st[k])?st[k]:[];if(!st[k].includes(s.value))st[k].push(s.value);REDRAW&&REDRAW()}
+function dmdel(pfx,k,i){TMP[pfx][k].splice(i,1);REDRAW&&REDRAW()}
+function dynKV(fields,store){
+  return fields.filter(f=>{const v=store[f.k];return v!==undefined&&v!==''&&!(Array.isArray(v)&&!v.length)&&(!f.show||f.show(store))})
+    .map(f=>{let v=store[f.k];if(Array.isArray(v))v=v.join(', ');else if(f.t==='date')v=fmtD(v);else if(f.t==='slider')v=v+' AZN';
+      return `<div class="k">${esc(f.l)}</div><div>${esc(v)}</div>`}).join('');
+}
+function reqMissing(fields,store){
+  return fields.filter(f=>(!f.show||f.show(store))&&f.req&&f.req(store)&&!store[f.k]).map(f=>f.l);
+}
 
 /* ================= GİRİŞ ================= */
 (function(){
@@ -296,16 +535,17 @@ function render(){
   else if(VIEW.page==='reports') m.innerHTML=viewReports();
   else if(VIEW.page==='admin') m.innerHTML=viewAdmin();
 }
-function go(page,type){VIEW={page,type:type||VIEW.type,tab:0};DETAIL=null;render()}
+function go(page,type){VIEW={page,type:type||VIEW.type};DETAIL=null;render()}
 function openCase(uid,tab){DETAIL={uid,tab:tab||0};VIEW.page='detail';render()}
+const cur=c=>c.instances[c.instances.length-1]||{};
 
-/* ================= İŞLƏRİN SİYAHISI ================= */
+/* ================= SİYAHI ================= */
 let FLT={};
 function viewList(type){
   const t=CASE_TYPES.find(x=>x.id===type);
   let rows=DB.cases.filter(c=>c.type===type);
   const f=FLT;
-  if(f.q) rows=rows.filter(c=>c.uid.toLowerCase().includes(f.q.toLowerCase())||c.instances.some(i=>i.caseNo.toLowerCase().includes(f.q.toLowerCase())));
+  if(f.q) rows=rows.filter(c=>c.uid.toLowerCase().includes(f.q.toLowerCase())||c.instances.some(i=>(i.caseNo||'').toLowerCase().includes(f.q.toLowerCase())));
   if(f.court) rows=rows.filter(c=>c.instances.some(i=>i.courtId==f.court));
   if(f.judge) rows=rows.filter(c=>c.instances.some(i=>i.judgeId==f.judge));
   if(f.status) rows=rows.filter(c=>c.status===f.status);
@@ -316,12 +556,12 @@ function viewList(type){
     const i=cur(c);
     return `<tr class="rowlink" onclick="openCase('${c.uid}')">
       <td><span class="uid">${c.uid}</span></td>
-      <td>${esc(i.caseNo||'—')}<div class="mut">${INST_LEVELS[i.level]}</div></td>
+      <td>${esc(i.caseNo||'—')}<div class="mut">${INST_LEVELS[i.level]||'—'}</div></td>
       <td>${esc(courtN(i.courtId))}<div class="mut">${esc(judgeN(i.judgeId))}</div></td>
       <td>${esc(orgN(c.general.orgId))}</td>
       <td>${esc(i.predmet||'—')}</td>
       <td>${fmtD(i.inDate)}</td>
-      <td>${statusPill(c.status)}</td></tr>`;
+      <td>${statusPill(c.status)}${c.general.extra&&c.general.extra.netice?`<div class="mut">${esc(c.general.extra.netice)}</div>`:''}</td></tr>`;
   }).join('');
   return `<div class="pagehead"><h2>${t.name}</h2><span class="pill pl-blue">${rows.length} iş</span><div class="sp"></div>
       ${can('write')?`<button class="btn btn-p" onclick="mNewCase('${type}')">+ Yeni iş</button>`:''}
@@ -331,55 +571,61 @@ function viewList(type){
         <input placeholder="UID / iş nömrəsi axtar" value="${esc(f.q||'')}" onchange="FLT.q=this.value;render()">
         <select onchange="FLT.court=this.value;render()"><option value="">Məhkəmə (hamısı)</option>${DB.courts.map(c=>`<option value="${c.id}" ${f.court==c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select>
         <select onchange="FLT.judge=this.value;render()"><option value="">Hakim (hamısı)</option>${DB.judges.map(j=>`<option value="${j.id}" ${f.judge==j.id?'selected':''}>${esc(j.name)}</option>`).join('')}</select>
-        <select onchange="FLT.status=this.value;render()"><option value="">Status (hamısı)</option>${DB.refs.caseStatus.map(s=>`<option ${f.status===s?'selected':''}>${s}</option>`).join('')}</select>
+        <select onchange="FLT.status=this.value;render()"><option value="">Status (hamısı)</option>${DB.refs.workStatus.map(s=>`<option ${f.status===s?'selected':''}>${s}</option>`).join('')}</select>
         <select onchange="FLT.org=this.value;render()"><option value="">Qurum (hamısı)</option>${DB.orgs.map(o=>`<option value="${o.id}" ${f.org==o.id?'selected':''}>${esc(o.name)}</option>`).join('')}</select>
         <select onchange="FLT.inst=this.value;render()"><option value="">Cari instansiya (hamısı)</option>${Object.entries(INST_LEVELS).map(([k,v])=>`<option value="${k}" ${f.inst===k?'selected':''}>${v}</option>`).join('')}</select>
         <input placeholder="Tərəf üzrə axtar" value="${esc(f.party||'')}" onchange="FLT.party=this.value;render()">
         <button class="btn btn-g" onclick="FLT={};render()">Filtri sıfırla</button>
       </div>
-      ${rows.length?`<div style="overflow:auto"><table><tr><th>UID</th><th>İş nömrəsi</th><th>Məhkəmə / Hakim</th><th>Qurum</th><th>Predmet</th><th>Daxil olma</th><th>Status</th></tr>${trs}</table></div>`:`<div class="empty">Bu meyarlara uyğun iş tapılmadı</div>`}
+      ${rows.length?`<div style="overflow:auto"><table><tr><th>UID</th><th>İş nömrəsi</th><th>Məhkəmə / Hakim</th><th>Qurum</th><th>Predmet</th><th>Daxil olma</th><th>Status / Nəticə</th></tr>${trs}</table></div>`:`<div class="empty">Bu meyarlara uyğun iş tapılmadı</div>`}
     </div>`;
 }
-const cur=c=>c.instances[c.instances.length-1];
 
-/* ================= İŞİN DETALI ================= */
+/* ================= DETAL ================= */
 function viewDetail(){
   const c=DB.cases.find(x=>x.uid===DETAIL.uid); if(!c) return '<div class="empty">İş tapılmadı</div>';
   const t=CASE_TYPES.find(x=>x.id===c.type);
+  const sch=SCHEMAS[c.type];
   const tabs=['Ümumi məlumat','İnstansiyalar','İcra vəziyyəti','Tarixçə'];
   let body='';
   if(DETAIL.tab===0){
-    const g=c.general;
+    const g=c.general, gx=g.extra||{};
     body=`<div class="card"><div class="kv">
       <div class="k">Qurum (tərəf)</div><div>${esc(orgN(g.orgId))}</div>
       <div class="k">Struktur bölmə</div><div>${esc(structN(g.structId))}</div>
       <div class="k">Nazirlik/qurum nümayəndəsi</div><div>${esc(g.repName||'—')}</div>
-      <div class="k">İşin faktiki başlama tarixi</div><div>${fmtD(g.factStart)}</div>
-      <div class="k">Quruma münasibətdə başlanma</div><div>${fmtD(g.orgStart)}</div>
-      <div class="k">Qeyd</div><div>${esc(g.note||'—')}</div></div>
+      <div class="k">Məhkəmə işinin başlama tarixi</div><div>${fmtD(g.factStart)}</div>
+      <div class="k">Məhkəmə işinin yekunlaşdığı tarix</div><div>${fmtD(g.orgStart)}</div>
+      ${dynKV(sch.general,gx)}
+      <div class="k">Əlavə qeyd</div><div>${esc(g.note||'—')}</div></div>
       ${can('write')?`<div style="margin-top:12px"><button class="btn btn-s btn-sm" onclick="mEditGeneral('${c.uid}')">Redaktə et</button></div>`:''}</div>`;
   } else if(DETAIL.tab===1){
-    body = c.instances.map((i,ix)=>`
+    body = c.instances.map((i,ix)=>{
+      const ifields=(sch.inst&&sch.inst[i.level])||[];
+      return `
       <div class="inst"><h4>${INST_LEVELS[i.level]} ${i.decision?`<span class="pill pl-green">Yekunlaşıb</span>`:`<span class="pill pl-blue">${esc(i.status||'Baxılır')}</span>`}
         <span style="margin-left:auto">${can('write')?`<button class="btn btn-s btn-sm" onclick="mInstance('${c.uid}',${ix})">Redaktə</button>`:''}</span></h4>
         <div class="kv">
           <div class="k">Məhkəmə</div><div>${esc(courtN(i.courtId))}</div>
           <div class="k">Hakim</div><div>${esc(judgeN(i.judgeId))}</div>
-          <div class="k">İş nömrəsi</div><div>${esc(i.caseNo||'—')}</div>
+          <div class="k">İşin nömrəsi</div><div>${esc(i.caseNo||'—')}</div>
           <div class="k">Daxil olma tarixi</div><div>${fmtD(i.inDate)}</div>
           <div class="k">İşin predmeti</div><div>${esc(i.predmet||'—')}</div>
+          ${dynKV(ifields,i.extra||{})}
           ${i.decision?`<div class="k">Qərar</div><div><b>${esc(i.decision.type)}</b> — ${fmtD(i.decision.date)}${i.decision.note?` · ${esc(i.decision.note)}`:''}</div>`:''}
         </div>
         <div class="subl">Tərəflər</div>
-        ${i.parties.length?i.parties.map((p,pi)=>`<span class="chip">${esc(p.name)} — <b>${esc(p.role)}</b>${p.code?` · ${p.kind==='F'?'FİN':'VÖEN'}: ${esc(p.code)}`:''} ${can('write')?`<a href="#" onclick="rmParty('${c.uid}',${ix},${pi});return false" style="color:var(--red)">✕</a>`:''}</span>`).join(''):'<span class="mut">Tərəf əlavə edilməyib</span>'}
+        ${i.parties.length?i.parties.map((p,pi)=>`<span class="chip ${p.arch?'arch':''}">${esc(p.name)} — <b>${esc(p.role)}</b>${p.code?` · ${p.kind==='F'?'FİN':'VÖEN'}: ${esc(p.code)}`:''}${p.addr?` · ${esc(p.addr)}`:''}
+          ${can('write')?`<a href="#" title="Arxiv" onclick="pArch('${c.uid}',${ix},${pi});return false">${p.arch?'↩':'⬇'}</a> <a href="#" onclick="rmParty('${c.uid}',${ix},${pi});return false" style="color:var(--red)">✕</a>`:''}</span>`).join(''):'<span class="mut">Tərəf əlavə edilməyib</span>'}
         ${can('write')?`<div style="margin-top:6px"><button class="btn btn-g btn-sm" onclick="mParty('${c.uid}',${ix})">+ Tərəf (İAMAS/DVX)</button></div>`:''}
         <div class="subl">Məhkəmə iclasları</div>
-        ${i.hearings.length?i.hearings.map(h=>`<span class="chip">${fmtD(h.date)}${h.note?` — ${esc(h.note)}`:''}</span>`).join(''):'<span class="mut">İclas qeyd edilməyib</span>'}
+        ${i.hearings.length?`<table><tr><th>Tarix / saat</th><th>İclas növü</th><th>Nümayəndə</th><th>İştirak</th><th>Qeyd</th></tr>
+          ${i.hearings.map(h=>`<tr><td>${fmtD(h.date)}${h.time?' '+esc(h.time):''}</td><td>${esc(h.type||'—')}</td><td>${esc(h.rep||'—')}</td><td>${esc(h.attend||'—')}</td><td>${esc(h.note||'')}</td></tr>`).join('')}</table>`:'<span class="mut">İclas qeyd edilməyib</span>'}
         ${can('write')?`<div style="margin-top:6px"><button class="btn btn-g btn-sm" onclick="mHearing('${c.uid}',${ix})">+ İclas</button></div>`:''}
-      </div>`).join('');
+      </div>`}).join('');
     if(can('write')){
       body += `<button class="btn btn-p" onclick="mInstance('${c.uid}',-1)">+ Yeni instansiya mərhələsi</button>
-        <div class="mut" style="margin-top:6px">${t.id==='xeta'?'İnzibati xəta işləri üçün kassasiya instansiyası sistem tərəfindən məhdudlaşdırılır.':'İş real prosesə uyğun instansiyalar arasında sərbəst hərəkət edə bilər (məs., apellyasiyadan yenidən I instansiyaya).'}</div>`;
+        <div class="mut" style="margin-top:6px">${t.id==='xeta'?'İnzibati xəta işləri üçün kassasiya instansiyası sistem tərəfindən məhdudlaşdırılır.':'İş real prosesə uyğun instansiyalar arasında sərbəst hərəkət edə bilər.'}</div>`;
     }
   } else if(DETAIL.tab===2){
     body=`<div class="card"><div class="kv">
@@ -395,102 +641,121 @@ function viewDetail(){
       <h2><span class="uid" style="font-size:17px">${c.uid}</span></h2>
       <span class="pill pl-gray">${typeN(c.type)}</span>${statusPill(c.status)}
       <div class="sp"></div>
-      ${can('write')?`<select style="width:200px" onchange="setStatus('${c.uid}',this.value)">
-        <option value="">İşin statusunu dəyiş…</option>${DB.refs.caseStatus.map(s=>`<option ${c.status===s?'disabled':''}>${s}</option>`).join('')}</select>`:''}
     </div>
     <div class="tabs">${tabs.map((tb,i)=>`<button class="tab ${DETAIL.tab===i?'act':''}" onclick="DETAIL.tab=${i};render()">${tb}</button>`).join('')}</div>${body}`;
 }
-function setStatus(uid,s){if(!s)return;const c=DB.cases.find(x=>x.uid===uid);c.status=s;chist(c,`Status dəyişdirildi: ${s}`);audit('İş statusu dəyişdirildi',uid);render()}
 function rmParty(uid,ix,pi){const c=DB.cases.find(x=>x.uid===uid);const p=c.instances[ix].parties.splice(pi,1)[0];chist(c,`Tərəf silindi: ${p.name}`);render()}
+function pArch(uid,ix,pi){const c=DB.cases.find(x=>x.uid===uid);const p=c.instances[ix].parties[pi];p.arch=!p.arch;chist(c,`Tərəf ${p.arch?'arxivləşdirildi':'arxivdən çıxarıldı'}: ${p.name}`);render()}
 
 /* ================= MODALLAR ================= */
 function openModal(html){$('modalBox').innerHTML=html;$('ovl').classList.add('open')}
-function closeModal(){$('ovl').classList.remove('open')}
+function closeModal(){$('ovl').classList.remove('open');REDRAW=null}
 
 function mNewCase(type){
-  openModal(`<h3>Yeni iş — ${typeN(type)}</h3>
-    <div class="warn">İş yaradıldıqda sistem avtomatik unikal <b>UID</b> təyin edir. İş növü sonradan dəyişdirilə bilməz.</div>
-    <div class="grid g2">
-      <div class="field"><label>Qurum (tərəf olan)</label><select id="f_org">${DB.orgs.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('')}</select></div>
-      <div class="field"><label>Struktur bölmə</label><select id="f_struct">${DB.structs.map(s=>`<option value="${s.id}">${esc(orgN(s.orgId))} — ${esc(s.name)}</option>`).join('')}</select></div>
-      <div class="field"><label>Nümayəndə</label><input id="f_rep" value="${esc(USER.name)}"></div>
-      <div class="field"><label>Faktiki başlama tarixi</label><input type="date" id="f_fact"></div>
-      <div class="field"><label>Quruma münasibətdə başlanma</label><input type="date" id="f_orgstart"></div>
-      <div class="field"><label>Qeyd</label><input id="f_note"></div>
-    </div>
-    <div class="foot"><button class="btn btn-g" onclick="closeModal()">İmtina</button>
-    <button class="btn btn-p" onclick="saveNewCase('${type}')">Yarat</button></div>`);
-}
-function saveNewCase(type){
-  DB.seq++; const uid=`MPAS-2026-${String(DB.seq).padStart(6,'0')}`;
-  const c={uid,type,status:'Baxılır',
-    general:{orgId:+$('f_org').value,structId:+$('f_struct').value,repName:$('f_rep').value,factStart:$('f_fact').value,orgStart:$('f_orgstart').value,note:$('f_note').value},
-    icra:{status:'İcraya yönəldilməyib',note:''},instances:[],history:[]};
-  DB.cases.push(c); chist(c,'İş yaradıldı'); audit('Yeni iş yaradıldı',uid);
-  closeModal(); toast(`İş yaradıldı: ${uid}`); openCase(uid,1); mInstance(uid,-1);
+  TMP={G:{}};
+  REDRAW=()=>drawGeneral(type,null);
+  drawGeneral(type,null);
 }
 function mEditGeneral(uid){
   const c=DB.cases.find(x=>x.uid===uid),g=c.general;
-  openModal(`<h3>Ümumi məlumat — ${uid}</h3><div class="grid g2">
-    <div class="field"><label>Qurum</label><select id="f_org">${DB.orgs.map(o=>`<option value="${o.id}" ${g.orgId==o.id?'selected':''}>${esc(o.name)}</option>`).join('')}</select></div>
-    <div class="field"><label>Struktur bölmə</label><select id="f_struct">${DB.structs.map(s=>`<option value="${s.id}" ${g.structId==s.id?'selected':''}>${esc(s.name)}</option>`).join('')}</select></div>
-    <div class="field"><label>Nümayəndə</label><input id="f_rep" value="${esc(g.repName)}"></div>
-    <div class="field"><label>Faktiki başlama</label><input type="date" id="f_fact" value="${g.factStart||''}"></div>
-    <div class="field"><label>Quruma münasibətdə</label><input type="date" id="f_orgstart" value="${g.orgStart||''}"></div>
-    <div class="field"><label>Qeyd</label><input id="f_note" value="${esc(g.note)}"></div></div>
-    <div class="foot"><button class="btn btn-g" onclick="closeModal()">İmtina</button>
-    <button class="btn btn-p" onclick="(function(){Object.assign(DB.cases.find(x=>x.uid==='${uid}').general,{orgId:+f_org.value,structId:+f_struct.value,repName:f_rep.value,factStart:f_fact.value,orgStart:f_orgstart.value,note:f_note.value});chist(DB.cases.find(x=>x.uid==='${uid}'),'Ümumi məlumat redaktə edildi');closeModal();render()})()">Yadda saxla</button></div>`);
+  TMP={G:Object.assign({_orgId:g.orgId,_structId:g.structId,_rep:g.repName,_fact:g.factStart,_org:g.orgStart,_note:g.note},g.extra)};
+  REDRAW=()=>drawGeneral(c.type,uid);
+  drawGeneral(c.type,uid);
 }
+function drawGeneral(type,uid){
+  const s=TMP.G;
+  openModal(`<h3>${uid?'Ümumi məlumat — '+uid:'Yeni iş — '+typeN(type)}</h3>
+    ${uid?'':'<div class="warn">İş yaradıldıqda sistem avtomatik unikal <b>UID</b> təyin edir. İş növü sonradan dəyişdirilə bilməz.</div>'}
+    <div class="grid g2">
+      <div class="field"><label>Qurum (tərəf olan)</label><select onchange="dset('G','_orgId',+this.value)">${DB.orgs.map(o=>`<option value="${o.id}" ${s._orgId==o.id?'selected':''}>${esc(o.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>Struktur bölmə</label><select onchange="dset('G','_structId',+this.value)">${DB.structs.map(x=>`<option value="${x.id}" ${s._structId==x.id?'selected':''}>${esc(orgN(x.orgId))} — ${esc(x.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>Nümayəndə</label><input value="${esc(s._rep??(USER?USER.name:''))}" onchange="dset('G','_rep',this.value)"></div>
+      <div class="field"><label>Məhkəmə işinin başlama tarixi</label><input type="date" value="${esc(s._fact||'')}" onchange="dset('G','_fact',this.value)"></div>
+      <div class="field"><label>Məhkəmə işinin yekunlaşdığı tarix</label><input type="date" value="${esc(s._org||'')}" onchange="dset('G','_org',this.value)"></div>
+      <div class="field"><label>Əlavə qeyd</label><input value="${esc(s._note||'')}" onchange="dset('G','_note',this.value)"></div>
+      ${dynRender(SCHEMAS[type].general,s,'G')}
+    </div>
+    <div class="foot"><button class="btn btn-g" onclick="closeModal()">İmtina</button>
+    <button class="btn btn-p" onclick="saveGeneral('${type}','${uid||''}')">${uid?'Yadda saxla':'Yarat'}</button></div>`);
+}
+function saveGeneral(type,uid){
+  const s=TMP.G;
+  const extra={}; Object.keys(s).forEach(k=>{if(!k.startsWith('_'))extra[k]=s[k]});
+  if(!uid){
+    DB.seq++; uid=`MPAS-2026-${String(DB.seq).padStart(6,'0')}`;
+    const c={uid,type,status:extra.status||'Davam edir',
+      general:{orgId:s._orgId||DB.orgs[0].id,structId:s._structId||DB.structs[0].id,repName:s._rep??(USER?USER.name:''),factStart:s._fact||'',orgStart:s._org||'',note:s._note||'',extra},
+      icra:{status:'İcraya yönəldilməyib',note:''},instances:[],history:[]};
+    DB.cases.push(c); chist(c,'İş yaradıldı'); audit('Yeni iş yaradıldı',uid);
+    closeModal(); toast(`İş yaradıldı: ${uid}`); openCase(uid,1); mInstance(uid,-1);
+  } else {
+    const c=DB.cases.find(x=>x.uid===uid);
+    Object.assign(c.general,{orgId:s._orgId,structId:s._structId,repName:s._rep,factStart:s._fact,orgStart:s._org,note:s._note,extra});
+    if(extra.status)c.status=extra.status;
+    chist(c,'Ümumi məlumat redaktə edildi'); audit('Ümumi məlumat redaktə edildi',uid);
+    closeModal(); render();
+  }
+}
+
 function mInstance(uid,ix){
   const c=DB.cases.find(x=>x.uid===uid);
+  const i = ix>=0 ? c.instances[ix] : null;
+  TMP={I:Object.assign(
+    {_level:i?i.level:1,_court:i?i.courtId:'',_judge:i?i.judgeId:'',_caseNo:i?i.caseNo:'',_inDate:i?i.inDate:'',_predmet:i?i.predmet:'',_status:i?i.status:'Baxılır',
+     _dtype:i&&i.decision?i.decision.type:'',_ddate:i&&i.decision?i.decision.date:'',_dnote:i&&i.decision?i.decision.note:''},
+    i?i.extra:{})};
+  REDRAW=()=>drawInstance(uid,ix);
+  drawInstance(uid,ix);
+}
+function drawInstance(uid,ix){
+  const c=DB.cases.find(x=>x.uid===uid);
   const t=CASE_TYPES.find(x=>x.id===c.type);
-  const i = ix>=0 ? c.instances[ix] : {level:1,courtId:'',judgeId:'',caseNo:'',inDate:'',predmet:'',status:'Baxılır',decision:null,parties:[],hearings:[]};
+  const s=TMP.I;
   const levels=Object.entries(INST_LEVELS).filter(([k])=>+k<=t.maxInst);
+  const courts=DB.courts.filter(x=>x.level===+s._level);
+  if(!courts.find(x=>x.id==s._court)) s._court=courts.length?courts[0].id:'';
+  const judges=DB.judges.filter(j=>j.courtId==s._court&&j.active);
+  if(!judges.find(j=>j.id==s._judge)) s._judge=judges.length?judges[0].id:'';
+  const ifields=(SCHEMAS[c.type].inst&&SCHEMAS[c.type].inst[+s._level])||[];
   openModal(`<h3>${ix>=0?'İnstansiya redaktəsi':'Yeni instansiya mərhələsi'} — ${uid}</h3>
     ${t.id==='xeta'?`<div class="warn">İnzibati xəta işləri yalnız I instansiya və apellyasiya üzrə hərəkət edə bilər.</div>`:''}
     <div class="grid g2">
-      <div class="field"><label>İnstansiya səviyyəsi</label><select id="i_level" onchange="fillCourts()">${levels.map(([k,v])=>`<option value="${k}" ${i.level==k?'selected':''}>${v}</option>`).join('')}</select></div>
-      <div class="field"><label>Məhkəmə</label><select id="i_court" onchange="fillJudges()"></select></div>
-      <div class="field"><label>Hakim</label><select id="i_judge"></select></div>
-      <div class="field"><label>İş nömrəsi (instansiya üzrə)</label><input id="i_caseno" value="${esc(i.caseNo)}"></div>
-      <div class="field"><label>Daxil olma tarixi</label><input type="date" id="i_indate" value="${i.inDate||''}"></div>
-      <div class="field"><label>İşin predmeti</label><select id="i_predmet">${DB.refs.predmets.map(p=>`<option ${i.predmet===p?'selected':''}>${p}</option>`).join('')}</select></div>
-      <div class="field"><label>İnstansiya üzrə status</label><select id="i_status">${DB.refs.caseStatus.map(s=>`<option ${i.status===s?'selected':''}>${s}</option>`).join('')}</select></div>
+      <div class="field"><label>İnstansiya səviyyəsi</label><select onchange="dset('I','_level',+this.value,1)">${levels.map(([k,v])=>`<option value="${k}" ${s._level==k?'selected':''}>${v}</option>`).join('')}</select></div>
+      <div class="field"><label>Məhkəmənin adı</label><select onchange="dset('I','_court',+this.value,1)">${courts.map(x=>`<option value="${x.id}" ${s._court==x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>Hakim</label><select onchange="dset('I','_judge',+this.value)">${judges.map(j=>`<option value="${j.id}" ${s._judge==j.id?'selected':''}>${esc(j.name)} (${esc(j.spec)})</option>`).join('')||'<option value="">—</option>'}</select></div>
+      <div class="field"><label>İşin nömrəsi (instansiya üzrə)</label><input value="${esc(s._caseNo)}" onchange="dset('I','_caseNo',this.value)"></div>
+      <div class="field"><label>Daxil olma tarixi</label><input type="date" value="${esc(s._inDate)}" onchange="dset('I','_inDate',this.value)"></div>
+      <div class="field"><label>İşin predmeti</label><select onchange="dset('I','_predmet',this.value)"><option value="">— seçin —</option>${DB.refs.predmets.map(p=>`<option ${s._predmet===p?'selected':''}>${p}</option>`).join('')}</select></div>
+      <div class="field"><label>İnstansiya üzrə status</label><select onchange="dset('I','_status',this.value)">${DB.refs.instStatus.map(x=>`<option ${s._status===x?'selected':''}>${x}</option>`).join('')}</select></div>
     </div>
+    <div class="subl">İnstansiya üzrə əlavə məlumatlar</div>
+    <div class="grid g2">${dynRender(ifields,s,'I')||'<span class="mut">Bu instansiya üçün əlavə xana yoxdur</span>'}</div>
     <div class="subl">Qərar (instansiya yekunlaşıbsa)</div>
     <div class="grid g3">
-      <div class="field"><label>Qərar növü</label><select id="i_dtype"><option value="">— yoxdur —</option>${DB.refs.decisionTypes.map(d=>`<option ${i.decision&&i.decision.type===d?'selected':''}>${d}</option>`).join('')}</select></div>
-      <div class="field"><label>Qərar tarixi</label><input type="date" id="i_ddate" value="${i.decision?i.decision.date:''}"></div>
-      <div class="field"><label>Qeyd</label><input id="i_dnote" value="${esc(i.decision?i.decision.note:'')}"></div>
+      <div class="field"><label>Qərar növü</label><select onchange="dset('I','_dtype',this.value)"><option value="">— yoxdur —</option>${DB.refs.decisionTypes.map(d=>`<option ${s._dtype===d?'selected':''}>${d}</option>`).join('')}</select></div>
+      <div class="field"><label>Qərar tarixi</label><input type="date" value="${esc(s._ddate)}" onchange="dset('I','_ddate',this.value)"></div>
+      <div class="field"><label>Qeyd</label><input value="${esc(s._dnote)}" onchange="dset('I','_dnote',this.value)"></div>
     </div>
     <div class="foot"><button class="btn btn-g" onclick="closeModal()">İmtina</button>
     <button class="btn btn-p" onclick="saveInstance('${uid}',${ix})">Yadda saxla</button></div>`);
-  fillCourts(i.courtId,i.judgeId);
-}
-function fillCourts(selC,selJ){
-  const lvl=+$('i_level').value;
-  const cs=DB.courts.filter(c=>c.level===lvl);
-  $('i_court').innerHTML=cs.map(c=>`<option value="${c.id}" ${selC==c.id?'selected':''}>${esc(c.name)}</option>`).join('')||'<option value="">—</option>';
-  fillJudges(selJ);
-}
-function fillJudges(selJ){
-  const cid=+$('i_court').value;
-  const js=DB.judges.filter(j=>j.courtId===cid&&j.active);
-  $('i_judge').innerHTML=js.map(j=>`<option value="${j.id}" ${selJ==j.id?'selected':''}>${esc(j.name)} (${esc(j.spec)})</option>`).join('')||'<option value="">—</option>';
 }
 function saveInstance(uid,ix){
   const c=DB.cases.find(x=>x.uid===uid);
   const t=CASE_TYPES.find(x=>x.id===c.type);
-  const lvl=+$('i_level').value;
-  if(lvl>t.maxInst){toast('Bu iş növü üçün həmin instansiya mümkün deyil');return}
-  const data={level:lvl,courtId:+$('i_court').value||null,judgeId:+$('i_judge').value||null,
-    caseNo:$('i_caseno').value,inDate:$('i_indate').value,predmet:$('i_predmet').value,status:$('i_status').value,
-    decision:$('i_dtype').value?{type:$('i_dtype').value,date:$('i_ddate').value,note:$('i_dnote').value}:null};
-  if(ix>=0){Object.assign(c.instances[ix],data);chist(c,`${INST_LEVELS[lvl]} məlumatları redaktə edildi`)}
-  else{c.instances.push(Object.assign({parties:[],hearings:[]},data));chist(c,`Yeni mərhələ əlavə edildi: ${INST_LEVELS[lvl]}`)}
+  const s=TMP.I;
+  if(+s._level>t.maxInst){toast('Bu iş növü üçün həmin instansiya mümkün deyil');return}
+  const ifields=(SCHEMAS[c.type].inst&&SCHEMAS[c.type].inst[+s._level])||[];
+  const miss=reqMissing(ifields,s);
+  if(miss.length){toast('Zəruri xanalar doldurulmayıb: '+miss.join(', '));return}
+  const extra={}; Object.keys(s).forEach(k=>{if(!k.startsWith('_'))extra[k]=s[k]});
+  const data={level:+s._level,courtId:+s._court||null,judgeId:+s._judge||null,caseNo:s._caseNo||'',inDate:s._inDate||'',predmet:s._predmet||'',status:s._status||'Baxılır',
+    decision:s._dtype?{type:s._dtype,date:s._ddate||'',note:s._dnote||''}:null,extra};
+  if(ix>=0){Object.assign(c.instances[ix],data);chist(c,`${INST_LEVELS[data.level]} məlumatları redaktə edildi`)}
+  else{c.instances.push(Object.assign({parties:[],hearings:[]},data));chist(c,`Yeni mərhələ əlavə edildi: ${INST_LEVELS[data.level]}`)}
   audit('İnstansiya məlumatı yeniləndi',uid);
   closeModal(); DETAIL={uid,tab:1}; VIEW.page='detail'; render();
 }
+
 function mParty(uid,ix){
   openModal(`<h3>Tərəf əlavə et</h3>
     <div class="grid g2">
@@ -501,7 +766,10 @@ function mParty(uid,ix){
     <div class="field" id="p_codewrap"><label id="p_codelabel">FİN</label>
       <div style="display:flex;gap:8px"><input id="p_code" placeholder="Məs.: 5AZE12R"><button class="btn btn-s" onclick="p_lookup()">Sorğula</button></div>
       <div class="mut" id="p_hintline" style="margin-top:4px">İmitasiya FİN-ləri: 5AZE12R, 7BXK93T, 3QWE45Y</div></div>
-    <div class="field"><label>Ad / Təşkilatın adı</label><input id="p_name"></div>
+    <div class="grid g2">
+      <div class="field"><label>Ad / Təşkilatın adı</label><input id="p_name"></div>
+      <div class="field"><label>Ünvan</label><input id="p_addr"></div>
+    </div>
     <div class="foot"><button class="btn btn-g" onclick="closeModal()">İmtina</button>
     <button class="btn btn-p" onclick="saveParty('${uid}',${ix})">Əlavə et</button></div>`);
 }
@@ -514,22 +782,35 @@ function p_hint(){
 function p_lookup(){
   const k=$('p_kind').value, code=$('p_code').value.trim().toUpperCase();
   const rec = k==='F' ? IAMAS[code] : DVX[code];
-  if(rec){$('p_name').value=rec.name;toast((k==='F'?'İAMAS':'DVX')+' sorğusu uğurlu (imitasiya)')}
+  if(rec){$('p_name').value=rec.name;if(rec.addr)$('p_addr').value=rec.addr;toast((k==='F'?'İAMAS':'DVX')+' sorğusu uğurlu (imitasiya)')}
   else toast('Qeyd tapılmadı — imitasiya bazasındakı nümunə kodlardan istifadə edin');
 }
 function saveParty(uid,ix){
   const c=DB.cases.find(x=>x.uid===uid);
   const name=$('p_name').value.trim(); if(!name){toast('Ad boş ola bilməz');return}
-  c.instances[ix].parties.push({kind:$('p_kind').value,code:$('p_kind').value==='Q'?'':$('p_code').value.trim(),name,role:$('p_role').value});
+  c.instances[ix].parties.push({kind:$('p_kind').value,code:$('p_kind').value==='Q'?'':$('p_code').value.trim(),name,role:$('p_role').value,addr:$('p_addr').value.trim(),arch:false});
   chist(c,`Tərəf əlavə edildi: ${name}`); closeModal(); render();
 }
+
 function mHearing(uid,ix){
   openModal(`<h3>Məhkəmə iclası</h3>
-    <div class="grid g2"><div class="field"><label>Tarix</label><input type="date" id="h_date"></div>
-    <div class="field"><label>Qeyd</label><input id="h_note"></div></div>
+    <div class="grid g2">
+      <div class="field"><label>Tarix</label><input type="date" id="h_date"></div>
+      <div class="field"><label>Saat</label><input type="time" id="h_time"></div>
+      <div class="field"><label>İclas növü</label><select id="h_type">${DB.refs.iclasNovleri.map(x=>`<option>${x}</option>`).join('')}</select></div>
+      <div class="field"><label>Nümayəndə</label><input id="h_rep" value="${esc(USER?USER.name:'')}"></div>
+      <div class="field"><label>İştirak</label><select id="h_att">${DB.refs.istirak.map(x=>`<option>${x}</option>`).join('')}</select></div>
+      <div class="field"><label>Qeyd</label><input id="h_note"></div>
+    </div>
     <div class="foot"><button class="btn btn-g" onclick="closeModal()">İmtina</button>
-    <button class="btn btn-p" onclick="(function(){const c=DB.cases.find(x=>x.uid==='${uid}');c.instances[${ix}].hearings.push({date:h_date.value,note:h_note.value});chist(c,'İclas əlavə edildi');closeModal();render()})()">Əlavə et</button></div>`);
+    <button class="btn btn-p" onclick="saveHearing('${uid}',${ix})">Əlavə et</button></div>`);
 }
+function saveHearing(uid,ix){
+  const c=DB.cases.find(x=>x.uid===uid);
+  c.instances[ix].hearings.push({date:$('h_date').value,time:$('h_time').value,type:$('h_type').value,rep:$('h_rep').value,attend:$('h_att').value,note:$('h_note').value});
+  chist(c,'İclas əlavə edildi'); closeModal(); render();
+}
+
 function mIcra(uid){
   const c=DB.cases.find(x=>x.uid===uid);
   openModal(`<h3>İcra vəziyyəti — ${uid}</h3>
@@ -542,13 +823,14 @@ function mIcra(uid){
 /* ================= HESABATLAR ================= */
 function viewReports(){
   const total=DB.cases.length;
-  const done=DB.cases.filter(c=>c.status==='Yekunlaşıb').length;
+  const done=DB.cases.filter(c=>c.status==='Yekunlaşmış').length;
   const act=total-done;
   const byType=CASE_TYPES.map(t=>({t,n:DB.cases.filter(c=>c.type===t.id).length}));
   const byOrg=DB.orgs.map(o=>({o,n:DB.cases.filter(c=>c.general.orgId===o.id).length})).filter(x=>x.n);
-  const byStatus=DB.refs.caseStatus.map(s=>({s,n:DB.cases.filter(c=>c.status===s).length})).filter(x=>x.n);
+  const byNetice={}; DB.cases.forEach(c=>{const n=c.general.extra&&c.general.extra.netice;if(n)byNetice[n]=(byNetice[n]||0)+1});
   const byCourt=DB.courts.map(co=>({co,n:DB.cases.filter(c=>c.instances.some(i=>i.courtId===co.id)).length})).filter(x=>x.n);
   const decs={}; DB.cases.forEach(c=>c.instances.forEach(i=>{if(i.decision)decs[i.decision.type]=(decs[i.decision.type]||0)+1}));
+  const cerimeCem=DB.cases.reduce((a,c)=>a+(+(c.general.extra&&c.general.extra.cerime)||0),0);
   const bar=(n,max)=>`<div style="background:#e5edf7;border-radius:4px;height:14px"><div style="width:${max?Math.round(n/max*100):0}%;background:var(--blue);height:14px;border-radius:4px"></div></div>`;
   const mx=Math.max(...byType.map(x=>x.n),1);
   return `<div class="pagehead"><h2>Hesabatlar və statistik təhlillər</h2><div class="sp"></div>
@@ -557,13 +839,13 @@ function viewReports(){
       <div class="stat"><div class="n">${total}</div><div class="l">Ümumi işlər</div></div>
       <div class="stat"><div class="n">${act}</div><div class="l">Davam edən</div></div>
       <div class="stat"><div class="n">${done}</div><div class="l">Yekunlaşmış</div></div>
-      <div class="stat"><div class="n">${DB.cases.filter(c=>c.icra.status==='İcra edilib').length}</div><div class="l">İcra edilmiş</div></div>
+      <div class="stat"><div class="n">${cerimeCem.toLocaleString()} AZN</div><div class="l">Cərimələrin cəmi (İX işləri)</div></div>
     </div>
     <div class="grid g2">
       <div class="card"><h3 style="font-size:14px;margin-bottom:10px;color:var(--blue-d)">İş növləri üzrə</h3>
         <table>${byType.map(x=>`<tr><td style="width:40%">${x.t.name}</td><td>${bar(x.n,mx)}</td><td style="width:40px;text-align:right"><b>${x.n}</b></td></tr>`).join('')}</table></div>
-      <div class="card"><h3 style="font-size:14px;margin-bottom:10px;color:var(--blue-d)">Statuslar üzrə</h3>
-        <table>${byStatus.map(x=>`<tr><td>${statusPill(x.s)}</td><td style="text-align:right"><b>${x.n}</b></td></tr>`).join('')||'<tr><td class="mut">Məlumat yoxdur</td></tr>'}</table></div>
+      <div class="card"><h3 style="font-size:14px;margin-bottom:10px;color:var(--blue-d)">Nəticələr üzrə</h3>
+        <table>${Object.entries(byNetice).map(([k,v])=>`<tr><td>${esc(k)}</td><td style="text-align:right"><b>${v}</b></td></tr>`).join('')||'<tr><td class="mut">Məlumat yoxdur</td></tr>'}</table></div>
       <div class="card"><h3 style="font-size:14px;margin-bottom:10px;color:var(--blue-d)">Qurumlar üzrə</h3>
         <table>${byOrg.map(x=>`<tr><td>${esc(x.o.name)}</td><td style="text-align:right"><b>${x.n}</b></td></tr>`).join('')}</table></div>
       <div class="card"><h3 style="font-size:14px;margin-bottom:10px;color:var(--blue-d)">Məhkəmələr üzrə</h3>
@@ -581,15 +863,15 @@ function exportCSV(type,from,to){
   let rows=DB.cases.filter(c=>!type||c.type===type);
   if(from) rows=rows.filter(c=>c.instances.some(i=>i.inDate>=from));
   if(to) rows=rows.filter(c=>c.instances.some(i=>i.inDate<=to));
-  const head=['UID','İş növü','Status','Qurum','Struktur bölmə','Nümayəndə','Faktiki başlama','İnstansiya','Məhkəmə','Hakim','İş nömrəsi','Daxil olma','Predmet','Tərəflər','Qərar','Qərar tarixi','İcra statusu'];
+  const head=['UID','İş növü','Status','Nəticə','ESDAS','Qurum','Struktur bölmə','Nümayəndə','Başlama tarixi','Yekunlaşma tarixi','İnstansiya','Məhkəmə','Hakim','İşin nömrəsi','Daxil olma','Predmet','Tərəflər','Qərar','Qərar tarixi','Quruma təsiri','İcra statusu'];
   const lines=[head.join(';')];
-  rows.forEach(c=>c.instances.forEach(i=>{
-    lines.push([c.uid,typeN(c.type),c.status,orgN(c.general.orgId),structN(c.general.structId),c.general.repName,c.general.factStart,
+  rows.forEach(c=>{const gx=c.general.extra||{};c.instances.forEach(i=>{const ex=i.extra||{};
+    lines.push([c.uid,typeN(c.type),c.status,gx.netice||'',gx.esdas||'',orgN(c.general.orgId),structN(c.general.structId),c.general.repName,c.general.factStart,c.general.orgStart,
       INST_LEVELS[i.level],courtN(i.courtId),judgeN(i.judgeId),i.caseNo,i.inDate,i.predmet,
       i.parties.map(p=>`${p.name} (${p.role})`).join(', '),
-      i.decision?i.decision.type:'',i.decision?i.decision.date:'',c.icra.status
+      i.decision?i.decision.type:(ex.netice||ex.sikayetNetice||''),i.decision?i.decision.date:(ex.yekunTarix||''),ex.tesir||'',c.icra.status
     ].map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(';'));
-  }));
+  })});
   const blob=new Blob(['﻿'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
   a.download=`MPAS_reyestr_${type||'tam'}.csv`;a.click();
@@ -618,8 +900,8 @@ function viewAdmin(){
     ${DB.judges.map(j=>`<tr><td>${esc(j.name)}</td><td>${esc(courtN(j.courtId))}</td><td>${esc(j.spec)}</td><td>${j.active?'<span class="pill pl-green">Aktiv</span>':'<span class="pill pl-gray">Deaktiv</span>'}</td>
       <td><button class="btn btn-g btn-sm" onclick="j_toggle(${j.id})">${j.active?'Deaktiv et':'Aktiv et'}</button></td></tr>`).join('')}</table></div>`;
   else if(ATAB===6){
-    body=Object.entries({caseStatus:'İş statusları',decisionTypes:'Qərar növləri',partyRoles:'Prosesual rollar',predmets:'İşin predmetləri',icraStatus:'İcra statusları'}).map(([key,title])=>`
-      <div class="card"><h3 style="font-size:14px;color:var(--blue-d);margin-bottom:8px">${title}</h3>
+    body=Object.keys(DB.refs).map(key=>`
+      <div class="card"><h3 style="font-size:14px;color:var(--blue-d);margin-bottom:8px">${esc(REF_LABELS[key]||key)}</h3>
       ${DB.refs[key].map((v,i)=>`<span class="chip">${esc(v)} <a href="#" style="color:var(--red)" onclick="refDel('${key}',${i});return false">✕</a></span>`).join('')}
       <div style="display:flex;gap:8px;margin-top:8px;max-width:420px"><input id="ref_${key}" placeholder="Yeni dəyər"><button class="btn btn-s btn-sm" onclick="refAdd('${key}')">Əlavə et</button></div></div>`).join('');
   }
