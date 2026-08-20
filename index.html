@@ -96,7 +96,7 @@ tr.rowlink:hover{background:var(--blue-l);cursor:pointer}
 <div id="login">
   <div class="login-card">
     <div class="badge-eimza">MEİS · Elektron imza (imitasiya)</div>
-    <h1>MPAS 2.0</h1>
+    <h1>MPAS 2.0 <span id="loginVer" class="pill pl-gray" style="font-size:11px;vertical-align:middle"></span></h1>
     <div class="sub">Məhkəmə Prosesləri Altsistemi — ƏƏSMN · DOST Rəqəmsal İnnovasiyalar Mərkəzi<br><b>İşlək prototip</b> — inteqrasiyalar (MİS, İAMAS, DVX, MEİS) imitasiya rejimindədir.</div>
     <div class="field"><label>İstifadəçi (MİS-dən gələn əməkdaşlar)</label><select id="loginUser"></select></div>
     <button class="btn btn-p" style="width:100%" onclick="doLogin()">E-imza ilə daxil ol</button>
@@ -105,7 +105,7 @@ tr.rowlink:hover{background:var(--blue-l);cursor:pointer}
 
 <div id="app">
   <div id="side">
-    <div class="logo"><b>MPAS 2.0</b><div>Məhkəmə Prosesləri Altsistemi<br>ƏƏSMN — prototip</div></div>
+    <div class="logo"><b>MPAS 2.0</b> <a href="#" id="verLink" onclick="mChangelog();return false" style="color:#9fc0e4;font-size:11px;text-decoration:none;border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:1px 7px" title="Dəyişikliklər jurnalı"></a><div>Məhkəmə Prosesləri Altsistemi<br>ƏƏSMN — prototip</div></div>
     <div id="nav"></div>
     <div class="usr"><b id="usrName"></b><span class="role" id="usrRole"></span><br>
       <button class="btn btn-sm btn-g" style="margin-top:8px" onclick="logout()">Çıxış</button>
@@ -118,6 +118,28 @@ tr.rowlink:hover{background:var(--blue-l);cursor:pointer}
 <div class="toast" id="toast"></div>
 
 <script>
+/* ================= VERSİYA ================= */
+const APP_VERSION='2.2.0';
+const CHANGELOG=[
+  {v:'2.2.0',d:'20.08.2026',items:[
+    'Versiya sistemi və dəyişikliklər jurnalı əlavə edildi (sol paneldə versiya nömrəsinə kliklə açılır)'
+  ]},
+  {v:'2.1.0',d:'20.08.2026',items:[
+    'Tələb cədvəllərinə (xlsx) uyğun sahə sxemləri: hər iş növü üçün Ümumi məlumat və instansiya hissələrinə əlavə xanalar',
+    'Ad dəyişiklikləri: "Faktiki başlama tarixi" → "Məhkəmə işinin başlama tarixi"; "Quruma münasibətdə başlama" → "Məhkəmə işinin yekunlaşdığı tarix"',
+    'Şərti aktivləşmə qaydaları: status → nəticə seçimləri; prokurorluq "Bəli" → 3 əlavə xana; nəticə "Əleyhinə" → əleyhinə əsası; nəticə seçiləndə "Yekun qərarın tarixi" məcburi',
+    'Cərimə/tənbeh məbləği üçün slider (0–50000 AZN), CM maddəsi və araşdırma orqanı üçün tag-tipli çoxseçim',
+    'İclaslar cədvəli genişləndi: tarix+saat, iclas növü, nümayəndə, iştirak; tərəflərə ünvan və arxiv funksiyası',
+    'Yeni soraqçalar (İXM/CM maddələri, qətimkan tədbirləri, təsirlər, müddətlər və s.) Admin Panelə əlavə edildi',
+    'CSV ixraca ESDAS, nəticə, quruma təsir sütunları əlavə edildi'
+  ]},
+  {v:'2.0.0',d:'19.08.2026',items:[
+    'İlkin prototip — Scope sənədi əsasında: 4 iş növü, avtomatik UID, instansiyalar üzrə hərəkət',
+    'MEİS e-imza, MİS, İAMAS, DVX inteqrasiyalarının imitasiyası',
+    'Admin Panel, soraqçalar, audit jurnalı, tarixçə, icra vəziyyəti',
+    'Hesabatlar bölməsi və Excel (CSV) ixrac'
+  ]}
+];
 /* ================= SORAQÇALAR ================= */
 const CASE_TYPES = [
   {id:'mulki',   name:'Mülki işlər',          maxInst:3},
@@ -500,8 +522,25 @@ function reqMissing(fields,store){
   return fields.filter(f=>(!f.show||f.show(store))&&f.req&&f.req(store)&&!store[f.k]).map(f=>f.l);
 }
 
+/* ================= VERSİYA GÖSTƏRİCİSİ ================= */
+function mChangelog(){
+  openModal(`<h3>Dəyişikliklər jurnalı — cari versiya: v${APP_VERSION}</h3>
+    ${CHANGELOG.map(c=>`
+      <div class="card" style="margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <b style="color:var(--blue-d)">v${c.v}</b>
+          ${c.v===APP_VERSION?'<span class="pill pl-green">Cari</span>':''}
+          <span class="mut">${c.d}</span>
+        </div>
+        ${c.items.map(i=>`<div style="font-size:12.5px;padding:3px 0;border-bottom:1px solid #f1f5f9">• ${esc(i)}</div>`).join('')}
+      </div>`).join('')}
+    <div class="foot"><button class="btn btn-p" onclick="closeModal()">Bağla</button></div>`);
+}
+
 /* ================= GİRİŞ ================= */
 (function(){
+  $('loginVer').textContent='v'+APP_VERSION;
+  $('verLink').textContent='v'+APP_VERSION;
   $('loginUser').innerHTML = DB.employees.map(e=>{
     const r={admin:'Admin',employee:'Nazirlik əməkdaşı',viewer:'İnzibati istifadəçi (nəzarət/hesabat)'}[e.role];
     return `<option value="${e.id}">${esc(e.name)} — ${esc(orgN(e.orgId))} (${r})</option>`;
