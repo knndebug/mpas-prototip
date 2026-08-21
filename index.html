@@ -119,8 +119,12 @@ tr.rowlink:hover{background:var(--blue-l);cursor:pointer}
 
 <script>
 /* ================= VERSİYA ================= */
-const APP_VERSION='2.2.0';
+const APP_VERSION='2.3.0';
 const CHANGELOG=[
+  {v:'2.3.0',d:'21.08.2026',items:[
+    'Bütün iş növləri üzrə instansiya formasından "Daxil olma tarixi" xanası çıxarıldı — onu "Məhkəmə bildirişinin daxil olduğu tarix" əvəz edir',
+    'Siyahı, detal görünüşü, CSV ixrac və dövr filtri bildiriş tarixinə uyğunlaşdırıldı'
+  ]},
   {v:'2.2.0',d:'20.08.2026',items:[
     'Versiya sistemi və dəyişikliklər jurnalı əlavə edildi (sol paneldə versiya nömrəsinə kliklə açılır)'
   ]},
@@ -599,7 +603,7 @@ function viewList(type){
       <td>${esc(courtN(i.courtId))}<div class="mut">${esc(judgeN(i.judgeId))}</div></td>
       <td>${esc(orgN(c.general.orgId))}</td>
       <td>${esc(i.predmet||'—')}</td>
-      <td>${fmtD(i.inDate)}</td>
+      <td>${fmtD((i.extra&&i.extra.bildirisTarix)||i.inDate)}</td>
       <td>${statusPill(c.status)}${c.general.extra&&c.general.extra.netice?`<div class="mut">${esc(c.general.extra.netice)}</div>`:''}</td></tr>`;
   }).join('');
   return `<div class="pagehead"><h2>${t.name}</h2><span class="pill pl-blue">${rows.length} iş</span><div class="sp"></div>
@@ -616,7 +620,7 @@ function viewList(type){
         <input placeholder="Tərəf üzrə axtar" value="${esc(f.party||'')}" onchange="FLT.party=this.value;render()">
         <button class="btn btn-g" onclick="FLT={};render()">Filtri sıfırla</button>
       </div>
-      ${rows.length?`<div style="overflow:auto"><table><tr><th>UID</th><th>İş nömrəsi</th><th>Məhkəmə / Hakim</th><th>Qurum</th><th>Predmet</th><th>Daxil olma</th><th>Status / Nəticə</th></tr>${trs}</table></div>`:`<div class="empty">Bu meyarlara uyğun iş tapılmadı</div>`}
+      ${rows.length?`<div style="overflow:auto"><table><tr><th>UID</th><th>İş nömrəsi</th><th>Məhkəmə / Hakim</th><th>Qurum</th><th>Predmet</th><th>Bildiriş tarixi</th><th>Status / Nəticə</th></tr>${trs}</table></div>`:`<div class="empty">Bu meyarlara uyğun iş tapılmadı</div>`}
     </div>`;
 }
 
@@ -648,7 +652,6 @@ function viewDetail(){
           <div class="k">Məhkəmə</div><div>${esc(courtN(i.courtId))}</div>
           <div class="k">Hakim</div><div>${esc(judgeN(i.judgeId))}</div>
           <div class="k">İşin nömrəsi</div><div>${esc(i.caseNo||'—')}</div>
-          <div class="k">Daxil olma tarixi</div><div>${fmtD(i.inDate)}</div>
           <div class="k">İşin predmeti</div><div>${esc(i.predmet||'—')}</div>
           ${dynKV(ifields,i.extra||{})}
           ${i.decision?`<div class="k">Qərar</div><div><b>${esc(i.decision.type)}</b> — ${fmtD(i.decision.date)}${i.decision.note?` · ${esc(i.decision.note)}`:''}</div>`:''}
@@ -740,7 +743,7 @@ function mInstance(uid,ix){
   const c=DB.cases.find(x=>x.uid===uid);
   const i = ix>=0 ? c.instances[ix] : null;
   TMP={I:Object.assign(
-    {_level:i?i.level:1,_court:i?i.courtId:'',_judge:i?i.judgeId:'',_caseNo:i?i.caseNo:'',_inDate:i?i.inDate:'',_predmet:i?i.predmet:'',_status:i?i.status:'Baxılır',
+    {_level:i?i.level:1,_court:i?i.courtId:'',_judge:i?i.judgeId:'',_caseNo:i?i.caseNo:'',_predmet:i?i.predmet:'',_status:i?i.status:'Baxılır',
      _dtype:i&&i.decision?i.decision.type:'',_ddate:i&&i.decision?i.decision.date:'',_dnote:i&&i.decision?i.decision.note:''},
     i?i.extra:{})};
   REDRAW=()=>drawInstance(uid,ix);
@@ -763,7 +766,6 @@ function drawInstance(uid,ix){
       <div class="field"><label>Məhkəmənin adı</label><select onchange="dset('I','_court',+this.value,1)">${courts.map(x=>`<option value="${x.id}" ${s._court==x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>
       <div class="field"><label>Hakim</label><select onchange="dset('I','_judge',+this.value)">${judges.map(j=>`<option value="${j.id}" ${s._judge==j.id?'selected':''}>${esc(j.name)} (${esc(j.spec)})</option>`).join('')||'<option value="">—</option>'}</select></div>
       <div class="field"><label>İşin nömrəsi (instansiya üzrə)</label><input value="${esc(s._caseNo)}" onchange="dset('I','_caseNo',this.value)"></div>
-      <div class="field"><label>Daxil olma tarixi</label><input type="date" value="${esc(s._inDate)}" onchange="dset('I','_inDate',this.value)"></div>
       <div class="field"><label>İşin predmeti</label><select onchange="dset('I','_predmet',this.value)"><option value="">— seçin —</option>${DB.refs.predmets.map(p=>`<option ${s._predmet===p?'selected':''}>${p}</option>`).join('')}</select></div>
       <div class="field"><label>İnstansiya üzrə status</label><select onchange="dset('I','_status',this.value)">${DB.refs.instStatus.map(x=>`<option ${s._status===x?'selected':''}>${x}</option>`).join('')}</select></div>
     </div>
@@ -787,7 +789,7 @@ function saveInstance(uid,ix){
   const miss=reqMissing(ifields,s);
   if(miss.length){toast('Zəruri xanalar doldurulmayıb: '+miss.join(', '));return}
   const extra={}; Object.keys(s).forEach(k=>{if(!k.startsWith('_'))extra[k]=s[k]});
-  const data={level:+s._level,courtId:+s._court||null,judgeId:+s._judge||null,caseNo:s._caseNo||'',inDate:s._inDate||'',predmet:s._predmet||'',status:s._status||'Baxılır',
+  const data={level:+s._level,courtId:+s._court||null,judgeId:+s._judge||null,caseNo:s._caseNo||'',inDate:s.bildirisTarix||'',predmet:s._predmet||'',status:s._status||'Baxılır',
     decision:s._dtype?{type:s._dtype,date:s._ddate||'',note:s._dnote||''}:null,extra};
   if(ix>=0){Object.assign(c.instances[ix],data);chist(c,`${INST_LEVELS[data.level]} məlumatları redaktə edildi`)}
   else{c.instances.push(Object.assign({parties:[],hearings:[]},data));chist(c,`Yeni mərhələ əlavə edildi: ${INST_LEVELS[data.level]}`)}
@@ -900,13 +902,13 @@ function viewReports(){
 }
 function exportCSV(type,from,to){
   let rows=DB.cases.filter(c=>!type||c.type===type);
-  if(from) rows=rows.filter(c=>c.instances.some(i=>i.inDate>=from));
-  if(to) rows=rows.filter(c=>c.instances.some(i=>i.inDate<=to));
-  const head=['UID','İş növü','Status','Nəticə','ESDAS','Qurum','Struktur bölmə','Nümayəndə','Başlama tarixi','Yekunlaşma tarixi','İnstansiya','Məhkəmə','Hakim','İşin nömrəsi','Daxil olma','Predmet','Tərəflər','Qərar','Qərar tarixi','Quruma təsiri','İcra statusu'];
+  if(from) rows=rows.filter(c=>c.instances.some(i=>((i.extra&&i.extra.bildirisTarix)||i.inDate)>=from));
+  if(to) rows=rows.filter(c=>c.instances.some(i=>((i.extra&&i.extra.bildirisTarix)||i.inDate)<=to));
+  const head=['UID','İş növü','Status','Nəticə','ESDAS','Qurum','Struktur bölmə','Nümayəndə','Başlama tarixi','Yekunlaşma tarixi','İnstansiya','Məhkəmə','Hakim','İşin nömrəsi','Məhkəmə bildirişinin daxil olduğu tarix','Predmet','Tərəflər','Qərar','Qərar tarixi','Quruma təsiri','İcra statusu'];
   const lines=[head.join(';')];
   rows.forEach(c=>{const gx=c.general.extra||{};c.instances.forEach(i=>{const ex=i.extra||{};
     lines.push([c.uid,typeN(c.type),c.status,gx.netice||'',gx.esdas||'',orgN(c.general.orgId),structN(c.general.structId),c.general.repName,c.general.factStart,c.general.orgStart,
-      INST_LEVELS[i.level],courtN(i.courtId),judgeN(i.judgeId),i.caseNo,i.inDate,i.predmet,
+      INST_LEVELS[i.level],courtN(i.courtId),judgeN(i.judgeId),i.caseNo,(i.extra&&i.extra.bildirisTarix)||i.inDate,i.predmet,
       i.parties.map(p=>`${p.name} (${p.role})`).join(', '),
       i.decision?i.decision.type:(ex.netice||ex.sikayetNetice||''),i.decision?i.decision.date:(ex.yekunTarix||''),ex.tesir||'',c.icra.status
     ].map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(';'));
